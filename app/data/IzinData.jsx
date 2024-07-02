@@ -1,0 +1,32 @@
+export const pilihanIzinKhusus = [
+  { id: 1, value: "Pegawai sendiri menikah" },
+  { id: 2, value: "Anak kandung menikah" },
+  { id: 3, value: "Anak adopsi menikah" },
+  { id: 4, value: "Istri meniggal" },
+  { id: 5, value: "Suami meniggal" },
+  { id: 6, value: "Anak Meninggal" },
+  { id: 7, value: "Orang tua meninggal" },
+  { id: 8, value: "Mertua meninggal" },
+  { id: 9, value: "Istri melahirkan" },
+  { id: 10, value: "Istri keguguran" },
+  { id: 11, value: "Pegawai sendiri melahirkan" },
+  { id: 12, value: "Pegawai sendiri keguguran" },
+  { id: 13, value: "Anggota keluarga serumah meninggal" },
+  { id: 14, value: "Anak dibaptis" },
+  { id: 15, value: "Anak sidhi" },
+  { id: 16, value: "Anak khitan" },
+];
+
+export const pilihanIzinBiasa = [
+  { id: 1, value: "Izin potong gaji" },
+  { id: 2, value: "Izin musibah" },
+  { id: 3, value: "Izin 1/2 hari" },
+  { id: 4, value: "Izin sakit 1 hari" },
+  { id: 5, value: "Izin sakit COVID-19 10 hari" },
+  { id: 6, value: "Tugas dinas luar" },
+  { id: 7, value: "Tugas training" },
+  { id: 8, value: "Tugas event" },
+  { id: 9, value: "Lupa Presensi" },
+  { id: 10, value: "Tidak Hadir (Hal Kebijakan Khusus)" },
+  { id: 11, value: "Hadir (jari tidak terbaca sistem / score Self Assesment sedang" },
+];
