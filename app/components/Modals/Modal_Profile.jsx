@@ -1,10 +1,10 @@
 import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import Modal from "react-native-modal";
-import Color from "../utils/Color";
-import Font from "../utils/Font";
+import Color from "../../utils/Color";
+import Font from "../../utils/Font";
 
-const CustomAlert = ({ isVisible, title, message, onConfirm, onCancel }) => {
+export const LogoutModal = ({ isVisible, title, message, onConfirm, onCancel }) => {
   return (
     <Modal isVisible={isVisible}>
       <View style={styles.container}>
@@ -54,4 +54,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CustomAlert;

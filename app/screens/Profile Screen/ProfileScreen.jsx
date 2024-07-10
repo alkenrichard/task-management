@@ -14,13 +14,13 @@ import {
   Octicons,
 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { FontAwesome6 } from "@expo/vector-icons";
 
 import Heading from "../../components/Heading";
+import { LogoutModal } from "../../components/Modals/Modal_Profile";
 
 import Color from "../../utils/Color";
 import Font from "../../utils/Font";
-import Collection from "../../utils/Collection";
-import CustomAlert from "../../components/Alerts";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ProfileScreen = () => {
@@ -73,7 +73,8 @@ const ProfileScreen = () => {
     <View style={styles.container}>
       <View style={styles.mainProfileContainer}>
         <View style={styles.subProfileContainer}>
-          <Image source={Collection.Profile} style={styles.userImage} />
+          {/* <Image source={Collection.Profile} style={styles.userImage} /> */}
+          <FontAwesome6 name="user-large" size={24} color="black" />
           <View style={styles.textProfile}>
             <Text style={styles.name}>{userData.nama_lengkap}</Text>
             <Text style={styles.gmail} numberOfLines={2}>
@@ -173,7 +174,7 @@ const ProfileScreen = () => {
           </View>
         </TouchableOpacity>
       </View>
-      <CustomAlert
+      <LogoutModal
         isVisible={isLogoutModalVisible}
         title="Logout"
         message="Are you sure you want to logout?"

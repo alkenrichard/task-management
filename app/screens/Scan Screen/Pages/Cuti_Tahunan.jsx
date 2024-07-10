@@ -21,13 +21,16 @@ import Collection from "../../../utils/Collection";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { KeyboardAvoidingView } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  IncompleteFormModal,
+  SuccessModal,
+} from "../../../components/Modals/Modal_Cuti_Tahunan";
 
 function formatDate(date) {
   return format(date, "EEEE, d MMMM yyyy", { locale: id });
 }
 
 const Izin_Tahunan = () => {
-  const [namaKaryawan, setNamaKaryawan] = useState("");
   const [jumlahHariCuti, setJumlahHariCuti] = useState(1);
   const [tanggalMulaiCuti, setTanggalMulaiCuti] = useState(new Date());
   const [alasanCuti, setAlasanCuti] = useState("");
@@ -72,24 +75,11 @@ const Izin_Tahunan = () => {
   };
 
   const submitForm = () => {
-    if (
-      !jumlahHariCuti ||
-      !tanggalMulaiCuti ||
-      !alasanCuti ||
-      !pengganti
-    ) {
+    if (!jumlahHariCuti || !tanggalMulaiCuti || !alasanCuti || !pengganti) {
       setFormIncomplete(true);
     } else {
       setFormIncomplete(false);
       setModalVisible(true);
-
-      console.log("==============================");
-      console.log("Data pengajuan Izin Tahunan:");
-      console.log("Nama Karyawan:", namaKaryawan);
-      console.log("Jumlah Hari:", jumlahHariCuti);
-      console.log("Tanggal Mulai Cuti:", tanggalMulaiCuti);
-      console.log("Alasan Cuti:", alasanCuti);
-      console.log("Pengganti:", pengganti);
     }
   };
 
@@ -207,89 +197,18 @@ const Izin_Tahunan = () => {
           </Button>
         </View>
 
-        <Modal
-          animationType="fade"
-          transparent={true}
+        <SuccessModal
           visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(false);
-          }}
-        >
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <LottieView
-                resizeMode="contain"
-                style={{ width: 100, height: 100 }}
-                source={Collection.Lottie_Checklist}
-                autoPlay
-                loop
-              />
-              <Text style={styles.modalText}>
-                Anda telah berhasil mengajukan cuti{"\n"}
-                <Text>
-                  Jumlah Hari{"\t"}
-                  {"\t"}: {jumlahHariCuti} {"\n"}
-                </Text>
-                <Text style={styles.start}>
-                  Dari{"\t"}
-                  {"\t"}
-                  {"\t"}
-                  {"\t"}
-                  {"\t"}
-                  {"\t"}
-                  {"\t"}
-                  {"\t"}
-                  {"\t"}
-                  {"\t"}
-                  {"\t"}: {formatDate(tanggalMulaiCuti)}
-                  {"\n"}
-                </Text>
-                <Text>
-                  Pengganti{"\t"}
-                  {"\t"}
-                  {"\t"}
-                  {"\t"}: {pengganti}
-                </Text>
-              </Text>
-              <TouchableOpacity
-                style={styles.modalButton}
-                onPress={() => setModalVisible(false)}
-              >
-                <Text style={styles.modalButtonText}>Tutup</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
+          onClose={() => setModalVisible(false)}
+          jumlahHariCuti={jumlahHariCuti}
+          tanggalMulaiCuti={tanggalMulaiCuti}
+          pengganti={pengganti}
+        />
 
-        <Modal
-          animationType="fade"
-          transparent={true}
+        <IncompleteFormModal
           visible={formIncomplete}
-          onRequestClose={() => {
-            setFormIncomplete(false);
-          }}
-        >
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <LottieView
-                style={{ width: 60, height: 60 }}
-                source={Collection.Lottie_Close}
-                autoPlay
-                loop
-              />
-              <Text style={styles.modalText}>
-                Mohon lengkapi semua kolom pada formulir pengajuan cuti.
-              </Text>
-
-              <TouchableOpacity
-                style={styles.modalButton}
-                onPress={() => setFormIncomplete(false)}
-              >
-                <Text style={styles.modalButtonText}>OKE</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
+          onClose={() => setFormIncomplete(false)}
+        />
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -356,32 +275,5 @@ const styles = StyleSheet.create({
     borderColor: Color.GreyText,
     borderRadius: 12,
   },
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  modalContent: {
-    backgroundColor: Color.White,
-    borderRadius: 20,
-    padding: 20,
-    gap: 10,
-    alignItems: "center",
-  },
-  modalText: {
-    fontSize: 17,
-    fontFamily: Font["Poppins-Medium"],
-  },
   start: { color: Color.Green },
-  end: { color: Color.Red },
-  modalButton: {
-    padding: 10,
-    borderRadius: 12,
-  },
-  modalButtonText: {
-    color: Color.Black,
-    fontFamily: Font["Poppins-Bold"],
-    fontSize: 17,
-  },
 });

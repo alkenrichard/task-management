@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import ScanScreen from "../screens/Scan Screen/ScanScreen";
 import Menu_Cuti from "../screens/Scan Screen/Pages/Menu_Cuti";
-import Izin_Tahunan from "../screens/Scan Screen/Pages/Izin_Tahunan";
+import Cuti_Tahunan from "../screens/Scan Screen/Pages/Cuti_Tahunan";
 import Izin_Khusus from "../screens/Scan Screen/Pages/Izin_Khusus";
 import Izin_Biasa from "../screens/Scan Screen/Pages/Izin_Biasa";
 
@@ -76,10 +76,10 @@ const ScanNavigation = () => {
         }}
       />
       <Stack.Screen
-        name="Izin_Tahunan"
-        component={Izin_Tahunan}
+        name="Cuti_Tahunan"
+        component={Cuti_Tahunan}
         options={{
-          headerTitle: "Izin Tahunan",
+          headerTitle: "Cuti Tahunan",
           headerStyle: {
             backgroundColor: Color.Primary,
             height: 60,

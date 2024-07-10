@@ -1,4 +1,4 @@
-import { CameraView, useCameraPermissions } from "expo-camera";
+import { CameraView, Camera } from "expo-camera";
 import { useEffect, useState } from "react";
 import {
   Button,
@@ -14,10 +14,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const { width, height } = Dimensions.get("window");
 
 export default function CameraScan() {
-  const [facing, setFacing] = useState("back");
-  const [permission, requestPermission] = useCameraPermissions();
+  const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
-  const [barcodeData, setBarcodeData] = useState(null);
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
@@ -34,13 +32,26 @@ export default function CameraScan() {
     loadUserData();
   }, []);
 
-  const handleBarCodeScanned = async ({ data }) => {
-    console.log("QR Code scanned:", data);
+  useEffect(() => {
+    const getCameraPermissions = async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      setHasPermission(status === "granted");
+    };
+
+    getCameraPermissions();
+  }, []);
+
+  const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
     alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-    setBarcodeData(data);
-    await sendAbsensiData(data);
   };
+
+  if (hasPermission === null) {
+    return <Text>Requesting for camera permission</Text>;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
 
   const sendAbsensiData = async (data) => {
     try {
@@ -79,44 +90,12 @@ export default function CameraScan() {
     }
   };
 
-  if (!permission) {
-    return <View />;
-  }
-
-  if (!permission.granted) {
-    return (
-      <View style={styles.container}>
-        <Text style={{ textAlign: "center" }}>
-          We need your permission to show the camera
-        </Text>
-        <Button onPress={requestPermission} title="grant permission" />
-      </View>
-    );
-  }
-
   return (
     <View style={styles.container}>
-      <CameraView 
-        on
+      <CameraView
         style={styles.camera}
-        facing={facing}
         barcodeScannerSettings={{
-          barcodeTypes: [
-            "qr",
-            "aztec",
-            "ean13",
-            "ean8",
-            "qr",
-            "pdf417",
-            "upc_e",
-            "datamatrix",
-            "code39",
-            "code93",
-            "itf14",
-            "codabar",
-            "code128",
-            "upc_a",
-          ],
+          barcodeTypes: ["qr", "pdf417"],
         }}
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
       >

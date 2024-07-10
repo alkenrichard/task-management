@@ -4,32 +4,32 @@ import {
   Text,
   TextInput,
   StyleSheet,
-  Modal,
-  TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Button } from "react-native-paper";
-import LottieView from "lottie-react-native";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
 
 import Font from "../../../utils/Font";
 import Color from "../../../utils/Color";
-import Collection from "../../../utils/Collection";
 import { pilihanIzinKhusus } from "../../../data/IzinData";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 import { SelectList } from "react-native-dropdown-select-list";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  RulesModal,
+  SuccessModal,
+  IncompleteFormModal,
+} from "../../../components/Modals/Modal_Izin_Khusus";
 
 function formatDate(date) {
   return format(date, "EEEE, d MMMM yyyy", { locale: id });
 }
 
 const Izin_Khusus = () => {
-  const [namaKaryawan, setNamaKaryawan] = useState("");
   const [jenisIzin, setJenisIzin] = useState();
   const [tanggalMulaiCuti, setTanggalMulaiCuti] = useState(new Date());
   const [alasanCuti, setAlasanCuti] = useState("");
@@ -38,7 +38,6 @@ const Izin_Khusus = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [rulesVisible, setRulesVisible] = useState(false);
   const [formIncomplete, setFormIncomplete] = useState(false);
-
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
@@ -67,22 +66,11 @@ const Izin_Khusus = () => {
   };
 
   const submitForm = () => {
-    if (!tanggalMulaiCuti || !alasanCuti || !pengganti) {
+    if (!tanggalMulaiCuti || !alasanCuti || !pengganti || !jenisIzin) {
       setFormIncomplete(true);
     } else {
       setFormIncomplete(false);
       setModalVisible(true);
-
-      console.log("==============================");
-      console.log("Data pengajuan Izin Khusus:");
-      console.log("Nama Karyawan:", namaKaryawan);
-      console.log(
-        "Jenis Izin:",
-        jenisIzin && data.find((item) => item.key === jenisIzin)?.value
-      );
-      console.log("Tanggal Mulai Cuti:", tanggalMulaiCuti);
-      console.log("Alasan Cuti:", alasanCuti);
-      console.log("Pengganti:", pengganti);
     }
   };
 
@@ -96,7 +84,7 @@ const Izin_Khusus = () => {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={Platform.select({ ios: 80, android: 500 })}
     >
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <Button
           style={styles.button}
           contentStyle={styles.rulesBtn}
@@ -204,157 +192,24 @@ const Izin_Khusus = () => {
             Ajukan Cuti
           </Button>
         </View>
-        <Modal
-          animationType="slide"
-          transparent={true}
+        <RulesModal
           visible={rulesVisible}
-          onRequestClose={() => setRulesVisible(false)}
-        >
-          <View style={styles.rulesContainer}>
-            <ScrollView style={styles.rulesContent}>
-              <TouchableOpacity
-                style={styles.rulesButton}
-                onPress={() => setRulesVisible(false)}
-              >
-                <AntDesign name="close" size={24} color="black" />
-              </TouchableOpacity>
-              <Text style={styles.rulesTitle}>Syarat & Ketentuan{"\n"}</Text>
-              <Text style={styles.rulesText}>
-                {"\u2022"} Cuti/Izin yang dimasukan, perlu mendapat persetujuan
-                atasan.
-                {"\n"}
-                {"\n"}
-                {"\u2022"} Data Izin khusus akan otomatis terdata di rekap
-                absen, sehingga tidak perlu entry melalui menu rekap absen.
-                {"\n"}
-                {"\n"}
-                {"\u2022"} Masukan informasi tanggal awal. Sistem akan
-                menghitung tanggal dan memperhitungkan kalender pendidikan dan
-                libur nasional.
-                {"\n"}
-                {"\n"}
-                {"\u2022"} Masukan informasi tanggal awal. Sistem akan
-                menghitung tanggal dan memperhitungkan kalender pendidikan dan
-                libur nasional.
-                {"\n"}
-              </Text>
-              <Text style={styles.rulesTitle}>
-                {"\n"}Peraturan Yayasan{"\n"}
-              </Text>
-              <Text style={styles.rulesText}>
-                {"\u2022"} 3 hari untuk Pegawai sendiri menikah.{"\n"}
-                {"\u2022"} 2 hari untuk Anak kandung menikah.{"\n"}
-                {"\u2022"} 2 hari untuk Anak adopsi menikah.{"\n"}
-                {"\u2022"} 3 hari untuk Istri meninggal.{"\n"}
-                {"\u2022"} 3 hari untuk Suami meninggal.{"\n"}
-                {"\u2022"} 3 hari untuk Anak meninggal.{"\n"}
-                {"\u2022"} 3 hari untuk Orang tua meninggal.{"\n"}
-                {"\u2022"} 3 hari untuk Mertua meninggal.{"\n"}
-                {"\u2022"} 2 hari untuk Istri melahirkan.{"\n"}
-                {"\u2022"} 2 hari untuk Istri keguguran.{"\n"}
-                {"\u2022"} 3 bulan untuk Pegawai sendiri melahirkan.{"\n"}
-                {"\u2022"} 2 hari untuk Pegawai sendiri keguguran.{"\n"}
-                {"\u2022"} 1 hari untuk Anggota keluarga serumah meninggal.
-                {"\n"}
-                {"\u2022"} 2 hari untuk Anak dibaptis.{"\n"}
-                {"\u2022"} 2 hari untuk Anak sidhi.{"\n"}
-                {"\u2022"} 2 hari untuk Anak khitan.{"\n"}
-                {"\n"}
-              </Text>
-            </ScrollView>
-          </View>
-        </Modal>
+          onClose={() => setRulesVisible(false)}
+        />
 
-        <Modal
-          animationType="fade"
-          transparent={true}
+        <SuccessModal
           visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(false);
-          }}
-        >
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <LottieView
-                resizeMode="contain"
-                style={{ width: 100, height: 100 }}
-                source={Collection.Lottie_Checklist}
-                autoPlay
-                loop
-              />
-              <Text style={styles.modalText1}>
-                Anda telah berhasil mengajukan cuti{"\n"}
-                <Text>
-                  Jenis Izin{"\t"}
-                  {"\t"}
-                  {"\t"}
-                  {"\t"}
-                  {"\t"}:{" "}
-                  {jenisIzin &&
-                    pilihanIzinKhusus.find((item) => item.key === jenisIzin)
-                      ?.value}
-                  {"\n"}
-                </Text>
-                <Text style={styles.start}>
-                  Dari{"\t"}
-                  {"\t"}
-                  {"\t"}
-                  {"\t"}
-                  {"\t"}
-                  {"\t"}
-                  {"\t"}
-                  {"\t"}
-                  {"\t"}
-                  {"\t"}
-                  {"\t"}: {formatDate(tanggalMulaiCuti)}
-                  {"\n"}
-                </Text>
-                <Text>
-                  Pengganti{"\t"}
-                  {"\t"}
-                  {"\t"}
-                  {"\t"}: {pengganti}
-                </Text>
-              </Text>
-              <TouchableOpacity
-                style={styles.modalButton}
-                onPress={() => setModalVisible(false)}
-              >
-                <Text style={styles.modalButtonText}>Tutup</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
+          onClose={() => setModalVisible(false)}
+          jenisIzin={jenisIzin}
+          tanggalMulaiCuti={tanggalMulaiCuti}
+          pengganti={pengganti}
+          pilihanIzinKhusus={pilihanIzinKhusus}
+        />
 
-        <Modal
-          animationType="fade"
-          transparent={true}
+        <IncompleteFormModal
           visible={formIncomplete}
-          onRequestClose={() => {
-            setFormIncomplete(false);
-          }}
-        >
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <LottieView
-                style={{ width: 60, height: 60 }}
-                source={Collection.Lottie_Close}
-                autoPlay
-                loop
-              />
-              <Text style={styles.modalText2}>
-                Mohon lengkapi semua kolom pada formulir pengajuan cuti.
-              </Text>
-
-              <TouchableOpacity
-                style={styles.modalButton}
-                onPress={() => setFormIncomplete(false)}
-              >
-                <Text style={styles.modalButtonText}>OKE</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
+          onClose={() => setFormIncomplete(false)}
+        />
       </ScrollView>
     </KeyboardAvoidingView>
   );

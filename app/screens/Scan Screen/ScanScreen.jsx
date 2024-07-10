@@ -1,9 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import {
-  View,
-  StyleSheet,
-  Text,
-} from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 
 import BottomSheet from "react-native-simple-bottom-sheet";
 
@@ -12,11 +8,10 @@ import Color from "../../utils/Color";
 
 import BottomSheets from "./Components/BottomSheets";
 import ScanningFrame from "./Components/ScanningFrame";
-import CameraScan from "./Components/CameraScan";
-import ButtonAbsen from "./Components/ButtonAbsen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
+import CameraQR from "./Components/CameraQR";
 
 export default function ScanScreen({ navigation }) {
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -83,18 +78,17 @@ export default function ScanScreen({ navigation }) {
     }
   };
 
-
   return (
     <View style={styles.container}>
       <View style={styles.timeContainer}>
         <Text style={styles.timeText}>{currentTime.toLocaleTimeString()}</Text>
       </View>
-      {/* <CameraScan />
-      <ScanningFrame /> */}
-      <ButtonAbsen
+      <CameraQR updateClockTimes={updateClockTimes} navigation={navigation} />
+      <ScanningFrame />
+      {/* <ButtonAbsen
         updateClockTimes={updateClockTimes}
         navigation={navigation}
-      />
+      /> */}
       <BottomSheet isOpen>
         {(onScrollEndDrag) => (
           <BottomSheets
@@ -123,6 +117,6 @@ const styles = StyleSheet.create({
   timeText: {
     fontSize: 30,
     fontFamily: Font["Poppins-Bold"],
-    color: Color.Black,
+    color: Color.White,
   },
 });

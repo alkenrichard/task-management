@@ -21,9 +21,9 @@ export default function Menu_Cuti() {
   return (
     <View style={styles.container}>
       <ListMenuCuti
-        title="Izin Tahunan"
+        title="Cuti Tahunan"
         iconName="calendar-check"
-        onPress={() => navigation.navigate("Izin_Tahunan")}
+        onPress={() => navigation.navigate("Cuti_Tahunan")}
       />
       <ListMenuCuti
         title="Izin Khusus"

@@ -40,34 +40,43 @@ export default function LoginModal({ hideModal }) {
       setFormIncomplete(true);
       return;
     }
-
-    console.log("Sending request to API...");
-
     try {
       const data = await loginAPI(email, password);
 
-      console.log("Parsed response data: ", data);
-
       if (!data.error) {
-        const { nik, nama_lengkap, email_penabur, divisi, nohp } = data;
-        console.log("User data:", {
+        const {
           nik,
           nama_lengkap,
           email_penabur,
           divisi,
+          penempatan_payroll,
           nohp,
-        });
+        } = data;
 
         await AsyncStorage.setItem(
           "userData",
-          JSON.stringify({ nik, nama_lengkap, email_penabur, divisi, nohp })
+          JSON.stringify({
+            nik,
+            nama_lengkap,
+            email_penabur,
+            divisi,
+            penempatan_payroll,
+            nohp,
+          })
         );
 
         const storedUserData = await AsyncStorage.getItem("userData");
         console.log("Stored user data:", storedUserData);
         hideModal();
         navigation.navigate("Home", {
-          user: { nik, nama_lengkap, email_penabur, divisi, nohp },
+          user: {
+            nik,
+            nama_lengkap,
+            email_penabur,
+            divisi,
+            penempatan_payroll,
+            nohp,
+          },
         });
       } else {
         Alert.alert("Login failed", data.error_msg);

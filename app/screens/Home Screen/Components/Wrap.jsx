@@ -5,7 +5,7 @@ import Color from "../../../utils/Color";
 import Font from "../../../utils/Font";
 
 export default function Wrap({ user }) {
-  if (!user || !user.nama_lengkap || !user.nik || !user.divisi) {
+  if (!user || !user.nama_lengkap || !user.nik || !user.penempatan_payroll) {
     console.error("User data is missing in Wrap component");
     return (
       <View style={styles.container}>
@@ -21,7 +21,7 @@ export default function Wrap({ user }) {
           <View style={{ flexDirection: "row" }}>
             <Text style={styles.school}>{user.nik}</Text>
             <View style={styles.line} />
-            <Text style={styles.school}>{user.divisi}</Text>
+            <Text style={styles.school}>{user.penempatan_payroll}</Text>
           </View>
         </View>
       </View>

@@ -2,7 +2,7 @@ import { StatusBar, StyleSheet, View } from "react-native";
 import Config_Fonts from "./app/configs/Config_Fonts";
 import { useFonts } from "expo-font";
 import { NavigationContainer } from "@react-navigation/native";
-import MainNavigation from "./app/routes/MainNavigation";
+import MainNavigation from "./app/navigation/MainNavigation";
 import "react-native-gesture-handler";
 import Color from "./app/utils/Color";
 

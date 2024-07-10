@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Calendar } from "react-native-calendars";
 import moment from "moment";
+import axios from "axios";
 
 import Font from "../../utils/Font";
 import Color from "../../utils/Color";
@@ -15,31 +16,61 @@ const CalendarScreen = () => {
   const [selectedDate, setSelectedDate] = useState(today);
 
   useEffect(() => {
-    fetchHolidays();
+    fetchHolidaysAndEvents();
   }, []);
 
-  const fetchHolidays = async () => {
+  const fetchHolidaysAndEvents = async () => {
     try {
-      const response = await fetch(
-        `https://calendarific.com/api/v2/holidays?api_key=${apiKey}&country=${countryCode}&year=2024`
+      const holidaysResponse = await axios.get(
+        `https://calendarific.com/api/v2/holidays?&api_key=${apiKey}&country=${countryCode}&year=2024`
       );
-      const data = await response.json();
-      if (data.response && data.response.holidays) {
-        const holidays = data.response.holidays;
-        const marked = {};
-        holidays.forEach((holiday) => {
+      const holidaysData = holidaysResponse.data;
+
+      const companyEventsResponse = await axios.get(
+        "https://calendar.devbpkpenaburjakarta.my.id/api/event"
+      );
+      const companyEventsData = companyEventsResponse.data;
+
+      const marked = {};
+
+      if (holidaysData.response && holidaysData.response.holidays) {
+        holidaysData.response.holidays.forEach((holiday) => {
           const date = moment(holiday.date.iso).format("YYYY-MM-DD");
           marked[date] = {
             marked: true,
             dotColor: Color.Red,
-            markedDot: { color: Color.Red }, // Menandai hari libur dengan warna merah
-            event: { name: holiday.name, time: "All day" }, // Menyatakan bahwa acara ini berlangsung sepanjang hari
+            event: { name: holiday.name, time: "All day" },
           };
         });
-        setMarkedDates(marked);
       }
+
+      if (companyEventsData.success && companyEventsData.data) {
+        companyEventsData.data.forEach((event) => {
+          event.dateRanges.forEach((range) => {
+            let currentDate = moment(range.start);
+            const endDate = moment(range.end);
+            while (currentDate <= endDate) {
+              const date = currentDate.format("YYYY-MM-DD");
+              if (marked[date]) {
+                marked[date].dotColor = Color.Blue; // Kombinasikan titik jika ada libur dan acara pada hari yang sama
+                marked[date].event.name += ` & ${event.title}`;
+                marked[date].event.time += ` & ${event.host}`;
+              } else {
+                marked[date] = {
+                  marked: true,
+                  dotColor: event.color,
+                  event: { name: event.title, time: event.host },
+                };
+              }
+              currentDate = currentDate.add(1, "days");
+            }
+          });
+        });
+      }
+
+      setMarkedDates(marked);
     } catch (error) {
-      console.error("Error fetching holidays:", error);
+      console.error("Error fetching holidays and events:", error);
     }
   };
 
@@ -65,7 +96,12 @@ const CalendarScreen = () => {
         </Text>
         <Text style={styles.cardText}>
           {markedDates[selectedDate]
-            ? `Time: ${markedDates[selectedDate].event.time}`
+            ? `${markedDates[selectedDate].event.time}`
+            : ""}
+        </Text>
+        <Text style={styles.cardText}>
+          {markedDates[selectedDate]
+            ? `${markedDates[selectedDate].event.time}`
             : ""}
         </Text>
       </View>

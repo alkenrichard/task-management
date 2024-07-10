@@ -20,7 +20,6 @@ const HomeScreen = () => {
         const userData = await AsyncStorage.getItem("userData");
         if (userData) {
           const parsedData = JSON.parse(userData);
-          console.log("Loaded user data:", parsedData);
           setUser(parsedData);
         } else {
           console.error("No user data found");
