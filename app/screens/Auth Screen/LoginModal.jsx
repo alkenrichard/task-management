@@ -11,7 +11,6 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
 import { Button } from "react-native-paper";
 import LottieView from "lottie-react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -21,15 +20,18 @@ import Collection from "../../utils/Collection";
 import Color from "../../utils/Color";
 
 import { loginAPI } from "../../services/API";
+import ModalAlert from "../../components/Modals/ModalAlert";
+import { useNavigation } from "@react-navigation/native";
 
 export default function LoginModal({ hideModal }) {
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
   const [formIncomplete, setFormIncomplete] = useState(false);
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -79,7 +81,8 @@ export default function LoginModal({ hideModal }) {
           },
         });
       } else {
-        Alert.alert("Login failed", data.error_msg);
+        setModalMessage("Login gagal, Password atau email salah");
+        setModalVisible(true);
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -200,6 +203,14 @@ export default function LoginModal({ hideModal }) {
           </View>
         </View>
       </Modal>
+
+      <ModalAlert
+        visible={modalVisible}
+        onClose={() => {
+          setModalVisible(false);
+        }}
+        message={modalMessage}
+      />
 
       {!isKeyboardVisible ? (
         <View style={styles.versionContainer}>

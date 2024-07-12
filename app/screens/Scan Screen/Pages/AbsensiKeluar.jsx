@@ -1,26 +1,42 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Alert, Text, Dimensions } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { format } from "date-fns";
+import { id } from "date-fns/locale";
 import { Button } from "react-native-paper";
 import Color from "../../../utils/Color";
 import Font from "../../../utils/Font";
-import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { format } from "date-fns";
-import { id } from "date-fns/locale";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import ModalAlert from "../../../components/Modals/ModalAlert";
+import { LogoutModal } from "../../../components/Modals/Modal_Profile";
 
-const { width } = Dimensions.get("window");
-
-const AbsensiKeluar = () => {
+export default function AbsensiKeluar({ navigation }) {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
   const [currentTime, setCurrentTime] = useState(new Date());
   const [userData, setUserData] = useState(null);
+  const [absenKeluarTime, setAbsenKeluarTime] = useState(null);
+  const [confirmModalVisible, setConfirmModalVisible] = useState(false);
 
   useEffect(() => {
     const loadUserData = async () => {
       try {
         const storedUserData = await AsyncStorage.getItem("userData");
         if (storedUserData) {
-          setUserData(JSON.parse(storedUserData));
+          const parsedUserData = JSON.parse(storedUserData);
+          setUserData(parsedUserData);
+
+          const storedAbsenKeluarTime = await AsyncStorage.getItem(
+            `absenKeluarTime_${parsedUserData.nik}`
+          );
+          if (storedAbsenKeluarTime) {
+            setAbsenKeluarTime(storedAbsenKeluarTime);
+            setModalMessage(
+              `Anda sudah mengakhiri sesi hari ini pada pukul ${storedAbsenKeluarTime}`
+            );
+            setModalVisible(true);
+          }
         }
       } catch (error) {
         console.error("Failed to load user data:", error);
@@ -50,20 +66,49 @@ const AbsensiKeluar = () => {
           }
         );
         if (response.data.success) {
-          Alert.alert("Success", "Absen keluar berhasil", [{ text: "OK" }], {
-            cancelable: false,
+          const currentTimeFormatted = format(new Date(), "HH:mm", {
+            locale: id,
           });
+          await AsyncStorage.setItem(
+            `absenKeluarTime_${userData.nik}`,
+            currentTimeFormatted
+          );
+          setAbsenKeluarTime(currentTimeFormatted);
+          setModalMessage(
+            `Absen keluar berhasil pada pukul ${currentTimeFormatted}`
+          );
+          setModalVisible(true);
           console.log(response.data.message);
         } else {
-          Alert.alert("Failed", response.data.message);
+          setModalMessage(response.data.message);
+          setModalVisible(true);
           console.error(response.data.message);
         }
       } else {
-        console.error("User data not available");
+        setModalMessage("Data user tidak tersedia");
+        setModalVisible(true);
       }
     } catch (error) {
+      setModalMessage("Terjadi kesalahan saat mengirim data presensi");
+      setModalVisible(true);
       console.error("Error sending absensi data:", error);
     }
+  };
+
+  const handleButtonPress = () => {
+    if (absenKeluarTime) {
+      setModalMessage(
+        `Anda sudah mengakhiri sesi hari ini pada pukul ${absenKeluarTime}`
+      );
+      setModalVisible(true);
+    } else {
+      setConfirmModalVisible(true);
+    }
+  };
+
+  const handleConfirm = () => {
+    setConfirmModalVisible(false);
+    sendAbsensiKeluar();
   };
 
   const formatDate = format(currentTime, "EEEE, d MMMM yyyy", { locale: id });
@@ -78,23 +123,35 @@ const AbsensiKeluar = () => {
       <View style={styles.buttonContainer}>
         <Button
           mode="contained"
-          onPress={sendAbsensiKeluar}
+          onPress={handleButtonPress}
           style={styles.button}
           contentStyle={styles.buttonContent}
         >
           <View style={styles.timeContainer}>
             <MaterialCommunityIcons
               name="gesture-tap"
-              size={150}
+              size={120}
               color={Color.White}
             />
             <Text style={styles.btnText}>Pulang</Text>
           </View>
         </Button>
       </View>
+      <LogoutModal
+        isVisible={confirmModalVisible}
+        title="Konfirmasi"
+        message="Yakin ingin mengakhiri sesi hari ini?"
+        onConfirm={handleConfirm}
+        onCancel={() => setConfirmModalVisible(false)}
+      />
+      <ModalAlert
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        message={modalMessage}
+      />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -104,16 +161,16 @@ const styles = StyleSheet.create({
   dateContainer: {
     alignItems: "center",
     paddingBottom: 50,
-    paddingTop:50
+    paddingTop: 50,
   },
   buttonContainer: {
     alignItems: "center",
     justifyContent: "center",
   },
   button: {
-    borderRadius: width / 1.6,
-    width: width / 1.6,
-    height: width / 1.6,
+    borderRadius: 300,
+    width: 300,
+    height: 300,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: Color.Primary,
@@ -130,6 +187,7 @@ const styles = StyleSheet.create({
   },
   timeContainer: {
     alignItems: "center",
+    justifyContent: "center",
   },
   btnText: {
     fontSize: 20,
@@ -148,5 +206,3 @@ const styles = StyleSheet.create({
     color: Color.Black,
   },
 });
-
-export default AbsensiKeluar;

@@ -1,12 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  Button,
-  Dimensions,
-  Alert,
-} from "react-native";
+import { Text, View, StyleSheet, Dimensions } from "react-native";
 import { CameraView, Camera } from "expo-camera";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
@@ -97,20 +90,21 @@ export default function CameraQR({ updateClockTimes, navigation }) {
           kode_bagian: userData.divisi,
           kode_izin_masuk: "HDR",
         };
-        console.log("Sending data to API:", payload);
+        console.log("Sending payload:", payload);
+
         const response = await axios.post(
           "https://devbpkpenaburjakarta.my.id/api_Login/Absen.php",
           payload,
           { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
         );
 
-        console.log("API Response:", response.data);
+        console.log("Response from server:", response.data);
 
         if (response.data.success) {
           const jamMasuk = response.data.jam_masuk;
           setClockInTime(jamMasuk);
           updateClockTimes(jamMasuk);
-          setModalMessage(`Absen masuk berhasil pada pukul ${jamMasuk}`);
+          setModalMessage(`Absen masuk berhasil`);
           setModalVisible(true);
           console.log(response.data.message);
         } else {

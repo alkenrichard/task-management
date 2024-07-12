@@ -7,6 +7,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Alert,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -15,6 +16,8 @@ import { SelectList } from "react-native-dropdown-select-list";
 import { Button } from "react-native-paper";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
+import axios from "axios";
+import { useNavigation } from "@react-navigation/native";
 
 import {
   RulesModal,
@@ -32,13 +35,17 @@ function formatDate(date) {
 const Izin_Biasa = () => {
   const [jenisIzin, setJenisIzin] = useState();
   const [tanggalMulaiCuti, setTanggalMulaiCuti] = useState(new Date());
+  const [tanggalSelesaiCuti, setTanggalSelesaiCuti] = useState(new Date());
   const [alasanCuti, setAlasanCuti] = useState("");
   const [pengganti, setPengganti] = useState("");
   const [showTanggalMulaiPicker, setShowTanggalMulaiPicker] = useState(false);
+  const [showTanggalSelesaiPicker, setShowTanggalSelesaiPicker] =
+    useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [rulesVisible, setRulesVisible] = useState(false);
   const [formIncomplete, setFormIncomplete] = useState(false);
   const [userData, setUserData] = useState(null);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const loadUserData = async () => {
@@ -61,16 +68,53 @@ const Izin_Biasa = () => {
     setTanggalMulaiCuti(currentDate);
   };
 
+  const onChangeTanggalSelesai = (event, selectedDate) => {
+    const currentDate = selectedDate || tanggalSelesaiCuti;
+    setShowTanggalSelesaiPicker(false);
+    setTanggalSelesaiCuti(currentDate);
+  };
+
   const showTanggalMulaiPickerModal = () => {
     setShowTanggalMulaiPicker(true);
   };
 
-  const submitForm = () => {
+  const showTanggalSelesaiPickerModal = () => {
+    setShowTanggalSelesaiPicker(true);
+  };
+
+  const submitForm = async () => {
     if (!tanggalMulaiCuti || !alasanCuti || !pengganti || !jenisIzin) {
       setFormIncomplete(true);
     } else {
       setFormIncomplete(false);
-      setModalVisible(true);
+
+      // Siapkan data yang akan dikirim ke API
+      const payload = {
+        nik: userData.nik,
+        nama_lengkap: userData.nama_lengkap,
+        kode_bagian: userData.divisi,
+        kode_izin_cuti: "CTB",
+        alasan: alasanCuti,
+        pengganti: pengganti,
+        tgl_mulai: formatDate(tanggalMulaiCuti),
+        tgl_selesai: formatDate(tanggalMulaiCuti),
+        // status: "pending",
+        // approve: "0123456789",
+      };
+      try {
+        const response = await axios.post(
+          `https://devbpkpenaburjakarta.my.id/api_Login/Izin.php`,
+          payload
+        );
+        if (response.status === 200) {
+          Alert.alert("Success", "Leave request submitted successfully");
+          // Tambahkan data ke history context atau lakukan tindakan lain sesuai kebutuhan
+        } else {
+          Alert.alert("Error", "Failed to submitr leave request");
+        }
+      } catch (error) {
+        Alert.alert("Error", "Failed to submito leave request");
+      }
     }
   };
 
@@ -157,6 +201,36 @@ const Izin_Biasa = () => {
               mode="date"
               display="default"
               onChange={onChangeTanggalMulai}
+            />
+          )}
+        </View>
+
+        <View style={styles.form}>
+          <Text style={styles.label}>Tanggal Selesai Cuti:</Text>
+          <Button
+            style={styles.button}
+            contentStyle={styles.colorBtn}
+            labelStyle={styles.textBtn}
+            mode="contained"
+            icon={() => (
+              <MaterialCommunityIcons
+                name="calendar"
+                size={24}
+                color={Color.White}
+              />
+            )}
+            onPress={showTanggalSelesaiPickerModal}
+          >
+            {formatDate(tanggalSelesaiCuti)}
+          </Button>
+          {showTanggalSelesaiPicker && (
+            <DateTimePicker
+              style={styles.form}
+              testID="dateTimePicker"
+              value={tanggalSelesaiCuti}
+              mode="date"
+              display="default"
+              onChange={onChangeTanggalSelesai}
             />
           )}
         </View>

@@ -158,10 +158,12 @@ const styles = StyleSheet.create({
     padding: 20,
     gap: 10,
     alignItems: "center",
+    justifyContent: "center",
   },
   modalText: {
     fontSize: 17,
     fontFamily: Font["Poppins-Medium"],
+    textAlign: "center",
   },
   modalButton: {
     padding: 10,

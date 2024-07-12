@@ -39,7 +39,7 @@ const CalendarScreen = () => {
           marked[date] = {
             marked: true,
             dotColor: Color.Red,
-            event: { name: holiday.name, time: "All day" },
+            event: { name: holiday.name, time: "", description: "" },
           };
         });
       }
@@ -53,8 +53,9 @@ const CalendarScreen = () => {
               const date = currentDate.format("YYYY-MM-DD");
               if (marked[date]) {
                 marked[date].dotColor = Color.Blue; // Kombinasikan titik jika ada libur dan acara pada hari yang sama
-                marked[date].event.name += ` & ${event.title}`;
-                marked[date].event.time += ` & ${event.host}`;
+                marked[date].event.name += `, ${event.title}`;
+                marked[date].event.time += `, ${event.host}`;
+                marked[date].event.description += `, ${event.description}`;
               } else {
                 marked[date] = {
                   marked: true,
@@ -101,7 +102,7 @@ const CalendarScreen = () => {
         </Text>
         <Text style={styles.cardText}>
           {markedDates[selectedDate]
-            ? `${markedDates[selectedDate].event.time}`
+            ? `${markedDates[selectedDate].event.description}`
             : ""}
         </Text>
       </View>
