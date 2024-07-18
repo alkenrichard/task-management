@@ -7,23 +7,26 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Alert,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
+import { SelectList } from "react-native-dropdown-select-list";
 import { Button } from "react-native-paper";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
+import axios from "axios";
+import { useNavigation } from "@react-navigation/native";
 
-import Font from "../../../utils/Font";
-import Color from "../../../utils/Color";
-import { pilihanIzinKhusus } from "../../../data/IzinData";
-import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
-import { SelectList } from "react-native-dropdown-select-list";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   RulesModal,
   SuccessModal,
   IncompleteFormModal,
 } from "../../../components/Modals/Modal_Izin_Khusus";
+import { pilihanIzinKhusus } from "../../../data/IzinData";
+import Font from "../../../utils/Font";
+import Color from "../../../utils/Color";
 
 function formatDate(date) {
   return format(date, "EEEE, d MMMM yyyy", { locale: id });
@@ -32,13 +35,17 @@ function formatDate(date) {
 const Izin_Khusus = () => {
   const [jenisIzin, setJenisIzin] = useState();
   const [tanggalMulaiCuti, setTanggalMulaiCuti] = useState(new Date());
+  const [tanggalSelesaiCuti, setTanggalSelesaiCuti] = useState(new Date());
   const [alasanCuti, setAlasanCuti] = useState("");
   const [pengganti, setPengganti] = useState("");
   const [showTanggalMulaiPicker, setShowTanggalMulaiPicker] = useState(false);
+  const [showTanggalSelesaiPicker, setShowTanggalSelesaiPicker] =
+    useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [rulesVisible, setRulesVisible] = useState(false);
   const [formIncomplete, setFormIncomplete] = useState(false);
   const [userData, setUserData] = useState(null);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const loadUserData = async () => {
@@ -61,16 +68,61 @@ const Izin_Khusus = () => {
     setTanggalMulaiCuti(currentDate);
   };
 
+  const onChangeTanggalSelesai = (event, selectedDate) => {
+    const currentDate = selectedDate || tanggalSelesaiCuti;
+    setShowTanggalSelesaiPicker(false);
+    setTanggalSelesaiCuti(currentDate);
+  };
+
   const showTanggalMulaiPickerModal = () => {
     setShowTanggalMulaiPicker(true);
   };
 
-  const submitForm = () => {
+  const showTanggalSelesaiPickerModal = () => {
+    setShowTanggalSelesaiPicker(true);
+  };
+
+  const submitForm = async () => {
     if (!tanggalMulaiCuti || !alasanCuti || !pengganti || !jenisIzin) {
       setFormIncomplete(true);
     } else {
       setFormIncomplete(false);
-      setModalVisible(true);
+
+      const selectedIzin = pilihanIzinKhusus.find(
+        (Option) => Option.value === jenisIzin
+      );
+
+      console.log("Selected Izin:", selectedIzin);
+
+      const payload = {
+        nik: userData.nik,
+        nama_lengkap: userData.nama_lengkap,
+        kode_bagian: userData.divisi,
+        kode_izin_masuk: selectedIzin.id,
+        alasan: alasanCuti,
+        pengganti: pengganti,
+        tanggal_mulai_izin: format(tanggalMulaiCuti, "yyyy-MM-dd"),
+        tanggal_selesai_izin: format(tanggalSelesaiCuti, "yyyy-MM-dd"),
+      };
+
+      console.log("Data to be sent:", payload);
+
+      try {
+        const response = await axios.post(
+          `https://devbpkpenaburjakarta.my.id/api_Login/Absen.php`,
+          payload,
+          { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
+        );
+
+        if (response.data.success) {
+          Alert.alert("Success", "Berhasil diajukan");
+          // Tambahkan data ke history context atau lakukan tindakan lain sesuai kebutuhan
+        } else {
+          Alert.alert("Error", "Gagal diajukan");
+        }
+      } catch (error) {
+        Alert.alert("Error", "Failed to submito leave request");
+      }
     }
   };
 
@@ -103,7 +155,7 @@ const Izin_Khusus = () => {
           <TextInput
             style={styles.input}
             value={
-              userData ? userData.nama_lengkap : "Data user tidak ditemukan"
+              userData ? userData.nama_lengkap : "Nama pengguna tidak ditemukan"
             }
             editable={false}
             multiline
@@ -114,7 +166,7 @@ const Izin_Khusus = () => {
           <Text style={styles.label}>NIK:</Text>
           <TextInput
             style={styles.input}
-            value={userData ? userData.nik : "Data user tidak ditemukan"}
+            value={userData ? userData.nik : "Nik pengguna tidak ditemukan"}
             editable={false}
             multiline
           />
@@ -162,6 +214,36 @@ const Izin_Khusus = () => {
         </View>
 
         <View style={styles.form}>
+          <Text style={styles.label}>Tanggal Selesai Cuti:</Text>
+          <Button
+            style={styles.button}
+            contentStyle={styles.colorBtn}
+            labelStyle={styles.textBtn}
+            mode="contained"
+            icon={() => (
+              <MaterialCommunityIcons
+                name="calendar"
+                size={24}
+                color={Color.White}
+              />
+            )}
+            onPress={showTanggalSelesaiPickerModal}
+          >
+            {formatDate(tanggalSelesaiCuti)}
+          </Button>
+          {showTanggalSelesaiPicker && (
+            <DateTimePicker
+              style={styles.form}
+              testID="dateTimePicker"
+              value={tanggalSelesaiCuti}
+              mode="date"
+              display="default"
+              onChange={onChangeTanggalSelesai}
+            />
+          )}
+        </View>
+
+        <View style={styles.form}>
           <Text style={styles.label}>Alasan Cuti:</Text>
           <TextInput
             style={styles.input}
@@ -192,6 +274,7 @@ const Izin_Khusus = () => {
             Ajukan Cuti
           </Button>
         </View>
+
         <RulesModal
           visible={rulesVisible}
           onClose={() => setRulesVisible(false)}
@@ -256,86 +339,8 @@ const styles = StyleSheet.create({
   start: {
     color: Color.Green,
   },
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  modalContent: {
-    backgroundColor: Color.White,
-    borderRadius: 20,
-    padding: 20,
-    gap: 10,
-    alignItems: "center",
-  },
-  modalText1: {
-    textAlign: "flex-start",
-    fontSize: 17,
-    fontFamily: Font["Poppins-Medium"],
-  },
-  modalText2: {
-    textAlign: "center",
-    fontSize: 17,
-    fontFamily: Font["Poppins-Medium"],
-  },
-  modalButton: {
-    padding: 10,
-    borderRadius: 12,
-  },
-  modalButtonText: {
-    color: Color.Black,
-    fontFamily: Font["Poppins-Bold"],
-    fontSize: 17,
-    textAlign: "center",
-  },
-
-  // RULES
   rulesBtn: {
     height: 50,
     backgroundColor: Color.Red,
-  },
-  rulesContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    paddingTop: 50,
-    paddingBottom: 50,
-  },
-  rulesContent: {
-    backgroundColor: Color.White,
-    borderRadius: 20,
-    padding: 20,
-    gap: 10,
-  },
-  rulesTitle: {
-    fontSize: 20,
-    marginBottom: 10,
-    textAlign: "center",
-    fontFamily: Font["Poppins-Bold"],
-    color: Color.Primary,
-    borderBottomWidth: 1,
-    borderBottomColor: Color.GreyText,
-    textDecorationLine: "none",
-  },
-  rulesText: {
-    textAlign: "justify",
-    fontSize: 15,
-    fontFamily: Font["Poppins-Medium"],
-    borderBottomWidth: 1,
-    borderBottomColor: Color.GreyText,
-    textDecorationLine: "none",
-  },
-  rulesButton: {
-    padding: 5,
-    alignSelf: "flex-end",
-    borderRadius: 20,
-  },
-  rulesButtonText: {
-    color: Color.Black,
-    fontFamily: Font["Poppins-Bold"],
-    fontSize: 16,
-    textAlign: "center",
   },
 });

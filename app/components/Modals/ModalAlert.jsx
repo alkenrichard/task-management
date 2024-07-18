@@ -2,8 +2,10 @@ import React from "react";
 import { Modal, View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import Color from "../../utils/Color";
 import Font from "../../utils/Font";
+import LottieView from "lottie-react-native";
+import Collection from "../../utils/Collection";
 
-const ModalAlert = ({ visible, onClose, message }) => {
+const ModalAlert = ({ visible, onClose, message,  }) => {
   return (
     <Modal
       animationType="fade"
@@ -13,6 +15,12 @@ const ModalAlert = ({ visible, onClose, message }) => {
     >
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
+          <LottieView
+            style={{ width: 80, height: 80 }}
+            source={Collection.Lottie_Checklist}
+            autoPlay
+            loop
+          />
           <Text style={styles.modalText}>{message}</Text>
           <TouchableOpacity style={styles.modalButton} onPress={onClose}>
             <Text style={styles.modalButtonText}>OK</Text>

@@ -7,16 +7,7 @@ import Collection from "../../../utils/Collection";
 
 const { width: screenWidth } = Dimensions.get("window");
 
-const Header = ({ user }) => {
-  if (!user || !user.nama_lengkap) {
-    console.error("User data is missing in Header component");
-    return (
-      <View style={styles.container}>
-        <Text style={styles.errorText}>User data is missing</Text>
-      </View>
-    );
-  }
-
+export default function Header({ user }) {
   const firstName = user.nama_lengkap.split(" ")[0];
 
   return (
@@ -31,7 +22,7 @@ const Header = ({ user }) => {
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -66,4 +57,3 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
 });
-export default Header;

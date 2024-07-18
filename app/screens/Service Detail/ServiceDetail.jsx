@@ -3,7 +3,7 @@ import { View, Image } from "react-native";
 import Collection from "../../utils/Collection";
 
 import Gaji from "../../screens/Service Detail/Pages/Gaji";
-import Cuti from "../../screens/Service Detail/Pages/Cuti";
+import History from "../../screens/Service Detail/Pages/History";
 import Ticketing from "../../screens/Service Detail/Pages/Ticketing";
 import Poliklinik from "../../screens/Service Detail/Pages/Poliklinik";
 import Pendidikan from "../../screens/Service Detail/Pages/Pendidikan";
@@ -22,7 +22,7 @@ const ServiceDetail = ({ route }) => {
       case 1:
         return <Gaji />;
       case 2:
-        return <Cuti />;
+        return <History />;
       case 3:
         return <Ticketing />;
       case 4:

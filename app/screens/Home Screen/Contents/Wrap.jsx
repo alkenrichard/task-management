@@ -5,14 +5,6 @@ import Color from "../../../utils/Color";
 import Font from "../../../utils/Font";
 
 export default function Wrap({ user }) {
-  if (!user || !user.nama_lengkap || !user.nik || !user.penempatan_payroll) {
-    console.error("User data is missing in Wrap component");
-    return (
-      <View style={styles.container}>
-        <Text style={styles.errorText}>User data is missing</Text>
-      </View>
-    );
-  }
   return (
     <View style={styles.container}>
       <View style={styles.wrap}>

@@ -90,16 +90,11 @@ export default function CameraQR({ updateClockTimes, navigation }) {
           kode_bagian: userData.divisi,
           kode_izin_masuk: "HDR",
         };
-        console.log("Sending payload:", payload);
-
         const response = await axios.post(
           "https://devbpkpenaburjakarta.my.id/api_Login/Absen.php",
           payload,
           { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
         );
-
-        console.log("Response from server:", response.data);
-
         if (response.data.success) {
           const jamMasuk = response.data.jam_masuk;
           setClockInTime(jamMasuk);

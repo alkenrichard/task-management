@@ -22,6 +22,7 @@ import { LogoutModal } from "../../components/Modals/Modal_Profile";
 import Color from "../../utils/Color";
 import Font from "../../utils/Font";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Collection from "../../utils/Collection";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
@@ -73,8 +74,8 @@ const ProfileScreen = () => {
     <View style={styles.container}>
       <View style={styles.mainProfileContainer}>
         <View style={styles.subProfileContainer}>
-          {/* <Image source={Collection.Profile} style={styles.userImage} /> */}
-          <FontAwesome6 name="user-large" size={24} color="black" />
+          <Image source={Collection.Profile} style={styles.userImage} />
+          {/* <FontAwesome6 name="user-large" size={24} color="black" /> */}
           <View style={styles.textProfile}>
             <Text style={styles.name}>{userData.nama_lengkap}</Text>
             <Text style={styles.gmail} numberOfLines={2}>

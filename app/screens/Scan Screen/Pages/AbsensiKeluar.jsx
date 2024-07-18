@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -30,12 +30,27 @@ export default function AbsensiKeluar({ navigation }) {
           const storedAbsenKeluarTime = await AsyncStorage.getItem(
             `absenKeluarTime_${parsedUserData.nik}`
           );
-          if (storedAbsenKeluarTime) {
+
+          const storedAbsenKeluarDate = await AsyncStorage.getItem(
+            `absenKeluarDate_${parsedUserData.nik}`
+          );
+
+          const todayDate = format(new Date(), "yyyy-MM-dd");
+
+          if (storedAbsenKeluarTime && storedAbsenKeluarDate === todayDate) {
             setAbsenKeluarTime(storedAbsenKeluarTime);
             setModalMessage(
               `Anda sudah mengakhiri sesi hari ini pada pukul ${storedAbsenKeluarTime}`
             );
             setModalVisible(true);
+          } else {
+            // Reset absen keluar jika hari sudah berganti
+            await AsyncStorage.removeItem(
+              `absenKeluarTime_${parsedUserData.nik}`
+            );
+            await AsyncStorage.removeItem(
+              `absenKeluarDate_${parsedUserData.nik}`
+            );
           }
         }
       } catch (error) {
@@ -69,9 +84,14 @@ export default function AbsensiKeluar({ navigation }) {
           const currentTimeFormatted = format(new Date(), "HH:mm", {
             locale: id,
           });
+          const todayDate = format(new Date(), "yyyy-MM-dd");
           await AsyncStorage.setItem(
             `absenKeluarTime_${userData.nik}`,
             currentTimeFormatted
+          );
+          await AsyncStorage.setItem(
+            `absenKeluarDate_${userData.nik}`,
+            todayDate
           );
           setAbsenKeluarTime(currentTimeFormatted);
           setModalMessage(
@@ -121,21 +141,19 @@ export default function AbsensiKeluar({ navigation }) {
         <Text style={styles.dateText}>{formatDate}</Text>
       </View>
       <View style={styles.buttonContainer}>
-        <Button
-          mode="contained"
+        <TouchableOpacity
           onPress={handleButtonPress}
           style={styles.button}
-          contentStyle={styles.buttonContent}
         >
-          <View style={styles.timeContainer}>
+          <View style={styles.iconContainer}>
             <MaterialCommunityIcons
-              name="gesture-tap"
-              size={120}
+              name="gesture-double-tap"
+              size={150}
               color={Color.White}
             />
             <Text style={styles.btnText}>Pulang</Text>
           </View>
-        </Button>
+        </TouchableOpacity>
       </View>
       <LogoutModal
         isVisible={confirmModalVisible}
@@ -166,34 +184,25 @@ const styles = StyleSheet.create({
   buttonContainer: {
     alignItems: "center",
     justifyContent: "center",
+    flex: 0.5,
   },
   button: {
-    borderRadius: 300,
+    borderRadius: 150,
     width: 300,
     height: 300,
-    justifyContent: "center",
-    alignItems: "center",
     backgroundColor: Color.Primary,
-    elevation: 5,
-    shadowColor: Color.Black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
-  buttonContent: {
-    justifyContent: "center",
     alignItems: "center",
-    height: "100%",
+    justifyContent: "center",
   },
-  timeContainer: {
+  iconContainer: {
     alignItems: "center",
     justifyContent: "center",
   },
   btnText: {
-    fontSize: 20,
+    fontSize: 28,
     fontFamily: Font["Poppins-Medium"],
     color: Color.White,
-    textAlign: "center",
+    marginTop: 10,
   },
   timeText: {
     fontSize: 28,

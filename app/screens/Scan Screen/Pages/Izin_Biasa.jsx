@@ -82,35 +82,57 @@ const Izin_Biasa = () => {
     setShowTanggalSelesaiPicker(true);
   };
 
+  const saveHistory = async (data) => {
+    try {
+      const history = await AsyncStorage.getItem("history");
+      const parsedHistory = history ? JSON.parse(history) : [];
+      parsedHistory.push(data);
+      await AsyncStorage.setItem("history", JSON.stringify(parsedHistory));
+    } catch (error) {
+      console.error("Failed to save history:", error);
+    }
+  };
+
   const submitForm = async () => {
     if (!tanggalMulaiCuti || !alasanCuti || !pengganti || !jenisIzin) {
       setFormIncomplete(true);
     } else {
       setFormIncomplete(false);
 
-      // Siapkan data yang akan dikirim ke API
+      const selectedIzin = pilihanIzinBiasa.find(
+        (option) => option.value === jenisIzin
+      );
+
+      console.log("Selected Izin:", selectedIzin);
+
       const payload = {
         nik: userData.nik,
         nama_lengkap: userData.nama_lengkap,
         kode_bagian: userData.divisi,
-        kode_izin_cuti: "CTB",
+        kode_izin_masuk: selectedIzin.id,
         alasan: alasanCuti,
         pengganti: pengganti,
-        tgl_mulai: formatDate(tanggalMulaiCuti),
-        tgl_selesai: formatDate(tanggalMulaiCuti),
-        // status: "pending",
-        // approve: "0123456789",
+        tanggal_mulai_izin: format(tanggalMulaiCuti, "yyyy-MM-dd"),
+        tanggal_selesai_izin: format(tanggalSelesaiCuti, "yyyy-MM-dd"),
+        tanggal_pengajuan: new Date().toLocaleString(),
+        status: "moving",
       };
+
+      console.log("Data to be sent:", payload);
+
       try {
         const response = await axios.post(
-          `https://devbpkpenaburjakarta.my.id/api_Login/Izin.php`,
-          payload
+          `https://devbpkpenaburjakarta.my.id/api_Login/Absen.php`,
+          payload,
+          { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
         );
-        if (response.status === 200) {
-          Alert.alert("Success", "Leave request submitted successfully");
-          // Tambahkan data ke history context atau lakukan tindakan lain sesuai kebutuhan
+
+        if (response.data.success) {
+          // Alert.alert("Success", "Berhasil diajukan");
+          setModalVisible(true);
+          saveHistory(payload);
         } else {
-          Alert.alert("Error", "Failed to submitr leave request");
+          Alert.alert("Error", "Gagal diajukan");
         }
       } catch (error) {
         Alert.alert("Error", "Failed to submito leave request");
@@ -147,7 +169,7 @@ const Izin_Biasa = () => {
           <TextInput
             style={styles.input}
             value={
-              userData ? userData.nama_lengkap : "Data user tidak ditemukan"
+              userData ? userData.nama_lengkap : "Nama pengguna tidak ditemukan"
             }
             editable={false}
             multiline
@@ -158,7 +180,7 @@ const Izin_Biasa = () => {
           <Text style={styles.label}>NIK:</Text>
           <TextInput
             style={styles.input}
-            value={userData ? userData.nik : "Data user tidak ditemukan"}
+            value={userData ? userData.nik : "Nik pengguna tidak ditemukan"}
             editable={false}
             multiline
           />

@@ -1,17 +1,17 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { View, StyleSheet, Text } from "react-native";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import BottomSheet from "react-native-simple-bottom-sheet";
+import { useFocusEffect } from "@react-navigation/native";
+import axios from "axios";
+
+import BottomSheets from "./Contents/BottomSheets";
+import ScanningFrame from "./Contents/ScanningFrame";
+import CameraQR from "./Contents/CameraQR";
 
 import Font from "../../utils/Font";
 import Color from "../../utils/Color";
 
-import BottomSheets from "./Components/BottomSheets";
-import ScanningFrame from "./Components/ScanningFrame";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
-import { useFocusEffect } from "@react-navigation/native";
-import CameraQR from "./Components/CameraQR";
 
 export default function ScanScreen({ navigation }) {
   const [currentTime, setCurrentTime] = useState(new Date());
