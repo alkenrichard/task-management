@@ -4,6 +4,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
 import ScanScreen from "../screens/Scan Screen/ScanScreen";
+import AbsensiKeluar from "../screens/Scan Screen/Pages/AbsensiKeluar";
 import Menu_Cuti from "../screens/Scan Screen/Pages/Menu_Cuti";
 import Cuti_Tahunan from "../screens/Scan Screen/Pages/Cuti_Tahunan";
 import Izin_Khusus from "../screens/Scan Screen/Pages/Izin_Khusus";
@@ -11,7 +12,6 @@ import Izin_Biasa from "../screens/Scan Screen/Pages/Izin_Biasa";
 
 import Color from "../utils/Color";
 import Font from "../utils/Font";
-import AbsensiKeluar from "../screens/Scan Screen/Pages/AbsensiKeluar";
 
 const Stack = createStackNavigator();
 

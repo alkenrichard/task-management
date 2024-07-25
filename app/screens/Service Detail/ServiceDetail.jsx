@@ -13,6 +13,7 @@ import Pengembangan from "../../screens/Service Detail/Pages/Pengembangan";
 import Sarana from "../../screens/Service Detail/Pages/Sarana";
 import SIM from "../../screens/Service Detail/Pages/SIM";
 import Biro from "../../screens/Service Detail/Pages/Biro";
+import Color from "../../utils/Color";
 
 const ServiceDetail = ({ route }) => {
   const { id, title } = route.params;
@@ -48,7 +49,7 @@ const ServiceDetail = ({ route }) => {
             style={{
               justifyContent: "center",
               alignItems: "center",
-              backgroundColor: "#fff",
+              backgroundColor: Color.White,
             }}
           >
             <Image

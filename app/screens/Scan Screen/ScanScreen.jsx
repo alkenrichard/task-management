@@ -12,7 +12,6 @@ import CameraQR from "./Contents/CameraQR";
 import Font from "../../utils/Font";
 import Color from "../../utils/Color";
 
-
 export default function ScanScreen({ navigation }) {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [clockInTime, setClockInTime] = useState("--:--");
@@ -85,10 +84,6 @@ export default function ScanScreen({ navigation }) {
       </View>
       <CameraQR updateClockTimes={updateClockTimes} navigation={navigation} />
       <ScanningFrame />
-      {/* <ButtonAbsen
-        updateClockTimes={updateClockTimes}
-        navigation={navigation}
-      /> */}
       <BottomSheet isOpen>
         {(onScrollEndDrag) => (
           <BottomSheets
@@ -108,11 +103,15 @@ const styles = StyleSheet.create({
     backgroundColor: Color.White,
   },
   timeContainer: {
-    backgroundColor: "transparent",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
     borderRadius: 5,
     position: "absolute",
     top: 20,
     zIndex: 1,
+    paddingRight: 20,
+    paddingLeft: 20,
+    paddingTop: 15,
+    paddingBottom: 10,
   },
   timeText: {
     fontSize: 30,

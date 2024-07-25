@@ -1,11 +1,12 @@
 import React from "react";
 import { Modal, View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import LottieView from "lottie-react-native";
+
 import Color from "../../utils/Color";
 import Font from "../../utils/Font";
-import LottieView from "lottie-react-native";
 import Collection from "../../utils/Collection";
 
-const ModalAlert = ({ visible, onClose, message,  }) => {
+export const ModalSuccess = ({ visible, onClose, message }) => {
   return (
     <Modal
       animationType="fade"
@@ -66,4 +67,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ModalAlert;
+export default ModalSuccess;

@@ -84,10 +84,11 @@ const Izin_Biasa = () => {
 
   const saveHistory = async (data) => {
     try {
-      const history = await AsyncStorage.getItem("history");
+      const historKey = `history_${userData.nik}`;
+      const history = await AsyncStorage.getItem(historKey);
       const parsedHistory = history ? JSON.parse(history) : [];
       parsedHistory.push(data);
-      await AsyncStorage.setItem("history", JSON.stringify(parsedHistory));
+      await AsyncStorage.setItem(historKey, JSON.stringify(parsedHistory));
     } catch (error) {
       console.error("Failed to save history:", error);
     }
@@ -122,13 +123,12 @@ const Izin_Biasa = () => {
 
       try {
         const response = await axios.post(
-          `https://devbpkpenaburjakarta.my.id/api_Login/Absen.php`,
+          `https://devbpkpenaburjakarta.my.id/api_Login/Izin.php`,
           payload,
           { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
         );
 
         if (response.data.success) {
-          // Alert.alert("Success", "Berhasil diajukan");
           setModalVisible(true);
           saveHistory(payload);
         } else {
@@ -191,7 +191,7 @@ const Izin_Biasa = () => {
           <SelectList
             data={pilihanIzinBiasa}
             boxStyles={styles.form}
-            setSelected={setJenisIzin}
+            setSelected={(id) => setJenisIzin(id)}
             placeholder="Pilih Jenis Izin"
             value={jenisIzin}
           />

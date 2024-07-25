@@ -1,15 +1,17 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 import React from "react";
+import { MaterialIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+
 import ProfileScreen from "../screens/Profile Screen/ProfileScreen";
 import Personal_Info from "../screens/Profile Screen/Pages/Personal_Info";
 import Security from "../screens/Profile Screen/Pages/Security";
 import Privacy_Policy from "../screens/Profile Screen/Pages/Privacy_Policy";
 import About_SAS from "../screens/Profile Screen/Pages/About_SAS";
+
 import Color from "../utils/Color";
 import Font from "../utils/Font";
-import { MaterialIcons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
 
 const Stack = createStackNavigator();
 

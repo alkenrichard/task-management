@@ -4,7 +4,7 @@ import { CameraView, Camera } from "expo-camera";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
-import ModalAlert from "../../../components/Modals/ModalAlert";
+import ModalSuccess from "../../../components/Modals/Modal_Success";
 
 const { width, height } = Dimensions.get("window");
 
@@ -15,6 +15,7 @@ export default function CameraQR({ updateClockTimes, navigation }) {
   const [clockInTime, setClockInTime] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+  // const [deviceIp, setDeviceIp] = useState("");
 
   useEffect(() => {
     const loadUserData = async () => {
@@ -27,7 +28,18 @@ export default function CameraQR({ updateClockTimes, navigation }) {
         console.error("Failed to load user data:", error);
       }
     };
+
+    //  const loadDeviceIp = async () => {
+    //    try {
+    //      const response = await fetch("https://api64.ipify.org?format=json");
+    //      const data = await response.json();
+    //      setDeviceIp(data.ip);
+    //    } catch (error) {
+    //      console.error("Failed to get device IP address:", error);
+    //    }
+    //  };
     loadUserData();
+    // loadDeviceIp();
   }, []);
 
   useEffect(() => {
@@ -71,14 +83,24 @@ export default function CameraQR({ updateClockTimes, navigation }) {
     }
   };
 
-  const sendAbsensiMasuk = async () => {
+  const sendAbsensiMasuk = async (scannedData) => {
     setScanned(true);
+
+    // const scannedIp = scannedData.ip;
+    // if (deviceIp !== scannedIp) {
+    //   setModalMessage(
+    //     "IP address tidak sesuai. Pastikan Anda terhubung ke jaringan yang benar."
+    //   );
+    //   setModalVisible(true);
+    //   return;
+    // }
 
     if (clockInTime) {
       setModalMessage(
         `Anda sudah melakukan presensi pada pukul ${clockInTime}`
       );
       setModalVisible(true);
+      setScanned(false);
       return;
     }
 
@@ -96,16 +118,13 @@ export default function CameraQR({ updateClockTimes, navigation }) {
           { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
         );
         if (response.data.success) {
-          const jamMasuk = response.data.jam_masuk;
-          setClockInTime(jamMasuk);
-          updateClockTimes(jamMasuk);
+          setClockInTime(response.data.jam_masuk);
+          updateClockTimes(response.data.jam_masuk);
           setModalMessage(`Absen masuk berhasil`);
           setModalVisible(true);
-          console.log(response.data.message);
         } else {
           setModalMessage(response.data.message);
           setModalVisible(true);
-          console.error(response.data.message);
         }
       } else {
         setModalMessage("User Data not available");
@@ -114,8 +133,15 @@ export default function CameraQR({ updateClockTimes, navigation }) {
     } catch (error) {
       setModalMessage("An error occurred while sending absensi data");
       setModalVisible(true);
-      console.error("Error sending absensi data:", error);
     }
+    //Reset Scanned
+    setScanned(false);
+  };
+
+  const handleBacodeScanned = ({ data }) => {
+    // const scannedData = JSON.parse(data);
+    // sendAbsensiMasuk(scannedData);
+    sendAbsensiMasuk();
   };
 
   if (hasPermission === null) {
@@ -128,7 +154,7 @@ export default function CameraQR({ updateClockTimes, navigation }) {
   return (
     <View style={styles.container}>
       <CameraView
-        onBarcodeScanned={scanned ? undefined : sendAbsensiMasuk}
+        onBarcodeScanned={scanned ? undefined : handleBacodeScanned}
         barcodeScannerSettings={{
           barcodeTypes: ["qr", "pdf417"],
         }}
@@ -138,7 +164,7 @@ export default function CameraQR({ updateClockTimes, navigation }) {
           {scanned && <View style={styles.barcodeContainer}></View>}
         </View>
       </CameraView>
-      <ModalAlert
+      <ModalSuccess
         visible={modalVisible}
         onClose={() => {
           setModalVisible(false);

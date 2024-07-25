@@ -9,7 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
 
-const BottomSheets = ({ navigation, updateClockTimes }) => {
+const BottomSheets = ({ navigation }) => {
   const [userData, setUserData] = useState(null);
   const [clockInTime, setClockInTime] = useState("--:--");
   const [clockOutTime, setClockOutTime] = useState("--:--");
@@ -43,16 +43,13 @@ const BottomSheets = ({ navigation, updateClockTimes }) => {
       const response = await axios.get(
         `https://devbpkpenaburjakarta.my.id/api_Login/Absen.php?nik=${nik}&tanggal_masuk=${todayDate}`
       );
-      const absensiData = response.data;
-      console.log("absen: ", absensiData);
-      if (absensiData) {
-        console.log("Jam Masuk: ", absensiData.jam_masuk);
-        console.log("Jam Pulang: ", absensiData.jam_pulang);
-        setClockInTime(absensiData.jam_masuk || "--:--");
-        setClockOutTime(absensiData.jam_pulang || "--:--");
+     
+      if (response.data) {
+        setClockInTime(response.data.jam_masuk || "--:--");
+        setClockOutTime(response.data.jam_pulang || "--:--");
         updateClockTimes(
-          absensiData.jam_masuk || "--:--",
-          absensiData.jam_pulang || "--:--"
+          response.data.jam_masuk || "--:--",
+          response.data.jam_pulang || "--:--"
         );
       }
     } catch (error) {
@@ -68,10 +65,10 @@ const BottomSheets = ({ navigation, updateClockTimes }) => {
     }, [userData])
   );
 
-   useEffect(() => {
-     console.log("Clock In Time:", clockInTime);
-     console.log("Clock Out Time:", clockOutTime);
-   }, [clockInTime, clockOutTime]);
+  const updateClockTimes = (jamMasuk, jamPulang) => {
+    setClockInTime(jamMasuk);
+    setClockOutTime(jamPulang);
+  };
 
   return (
     <ScrollView>

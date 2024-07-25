@@ -10,9 +10,14 @@ const History = () => {
   useEffect(() => {
     const loadHistory = async () => {
       try {
-        const history = await AsyncStorage.getItem("history");
-        if (history) {
-          setHistory(JSON.parse(history));
+        const userData = await AsyncStorage.getItem("userData");
+        if (userData) {
+          const parsedUserData = JSON.parse(userData);
+          const historyKey = `history_${parsedUserData.nik}`;
+          const history = await AsyncStorage.getItem(historyKey);
+          if (history) {
+            setHistory(JSON.parse(history));
+          }
         }
       } catch (error) {
         console.error("Failed to load history data:", error);
@@ -21,6 +26,7 @@ const History = () => {
 
     loadHistory();
   }, []);
+
   
   const renderItem = ({ item }) => {
     const status = item.status ? item.status.toLowerCase() : "unknown";

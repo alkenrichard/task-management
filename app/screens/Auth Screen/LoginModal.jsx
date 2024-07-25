@@ -14,13 +14,15 @@ import { Ionicons } from "@expo/vector-icons";
 import { Button } from "react-native-paper";
 import LottieView from "lottie-react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as LocalAuthentication from "expo-local-authentication";
 
 import Font from "../../utils/Font";
 import Collection from "../../utils/Collection";
 import Color from "../../utils/Color";
 
 import { loginAPI } from "../../services/API";
-import ModalAlert from "../../components/Modals/ModalAlert";
+import ModalFailed from "../../components/Modals/Modal_Failed";
+
 import { useNavigation } from "@react-navigation/native";
 
 export default function LoginModal({ hideModal }) {
@@ -39,7 +41,8 @@ export default function LoginModal({ hideModal }) {
 
   const handleLogin = async () => {
     if (email === "" || password === "") {
-      setFormIncomplete(true);
+      setModalMessage("Mohon lengkapi dan periksa Email dan Password kamu.");
+      setModalVisible(true);
       return;
     }
     try {
@@ -67,26 +70,53 @@ export default function LoginModal({ hideModal }) {
           })
         );
 
-        const storedUserData = await AsyncStorage.getItem("userData");
-        console.log("Stored user data:", storedUserData);
-        hideModal();
-        navigation.navigate("Home", {
-          user: {
-            nik,
-            nama_lengkap,
-            email_penabur,
-            divisi,
-            penempatan_payroll,
-            nohp,
-          },
-        });
+        // Tambahkan autentikasi biometrik di sini
+        const compatible = await LocalAuthentication.hasHardwareAsync();
+        if (compatible) {
+          const enrolled = await LocalAuthentication.isEnrolledAsync();
+          if (enrolled) {
+            const result = await LocalAuthentication.authenticateAsync({
+              promptMessage: "Login with Biometrics",
+              fallbackLabel: "Enter Password",
+            });
+
+            if (result.success) {
+              const storedUserData = await AsyncStorage.getItem("userData");
+              console.log("Stored user data:", storedUserData);
+              hideModal();
+              navigation.navigate("Home", {
+                user: {
+                  nik,
+                  nama_lengkap,
+                  email_penabur,
+                  divisi,
+                  penempatan_payroll,
+                  nohp,
+                },
+              });
+            } else {
+              setModalMessage("Biometric authentication failed");
+              setModalVisible(true);
+            }
+          } else {
+            setModalMessage(
+              "Please set up biometrics on your device and try again."
+            );
+            setModalVisible(true);
+          }
+        } else {
+          setModalMessage(
+            "Your device does not support biometric authentication."
+          );
+          setModalVisible(true);
+        }
       } else {
-        setModalMessage("Login gagal, Password atau email salah");
+        setModalMessage("Mohon lengkapi dan periksa Email dan Password kamu.");
         setModalVisible(true);
       }
     } catch (error) {
-      console.error("Login error:", error);
-      Alert.alert("An error occurred", error.message);
+      setModalMessage("An error occurred", error.message);
+      setModalVisible(true);
     }
   };
 
@@ -174,49 +204,13 @@ export default function LoginModal({ hideModal }) {
         Sign In
       </Button>
 
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={formIncomplete}
-        onRequestClose={() => {
-          setFormIncomplete(false);
-        }}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <LottieView
-              style={{ width: 80, height: 80 }}
-              source={Collection.Lottie_Close}
-              autoPlay
-              loop
-            />
-            <Text style={styles.modalText}>
-              Mohon lengkapi dan periksa Email dan Password kamu.
-            </Text>
-
-            <TouchableOpacity
-              style={styles.modalButton}
-              onPress={() => setFormIncomplete(false)}
-            >
-              <Text style={styles.modalButtonText}>OKE</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
-      <ModalAlert
+      <ModalFailed
         visible={modalVisible}
         onClose={() => {
           setModalVisible(false);
         }}
         message={modalMessage}
       />
-
-      {!isKeyboardVisible ? (
-        <View style={styles.versionContainer}>
-          <Text style={styles.versionText}>Version 0.0.0</Text>
-        </View>
-      ) : null}
     </View>
   );
 }

@@ -12,6 +12,7 @@ import LottieView from "lottie-react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
+
 import Collection from "../../utils/Collection";
 import Font from "../../utils/Font";
 import Color from "../../utils/Color";
@@ -82,35 +83,24 @@ export const SuccessModal = ({
         />
         <Text style={styles.modalText}>
           Anda telah berhasil mengajukan cuti{"\n"}
-          <Text>
-            Jenis Izin{"\t"}
-            {"\t"}
-            {"\t"}
-            {"\t"}:{" "}
-            {jenisIzin &&
-              pilihanIzinBiasa.find((item) => item.key === jenisIzin)?.value}
-            {"\n"}
-          </Text>
-          <Text style={styles.start}>
-            Dari{"\t"}
-            {"\t"}
-            {"\t"}
-            {"\t"}
-            {"\t"}
-            {"\t"}
-            {"\t"}
-            {"\t"}
-            {"\t"}
-            {"\t"}:{" "}
-            {format(tanggalMulaiCuti, "EEEE, d MMMM yyyy", { locale: id })}
-            {"\n"}
-          </Text>
-          <Text>
-            Pengganti{"\t"}
-            {"\t"}
-            {"\t"}: {pengganti}
-          </Text>
         </Text>
+        <View style={styles.row}>
+          <Text style={styles.label}>Jenis Izin:</Text>
+          <Text style={styles.value}>
+            {jenisIzin &&
+              pilihanIzinBiasa.find((item) => item.id === jenisIzin)?.value}
+          </Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Dari:</Text>
+          <Text style={styles.value}>
+            {format(tanggalMulaiCuti, "EEEE, d MMMM yyyy", { locale: id })}
+          </Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Pengganti:</Text>
+          <Text style={styles.value}>{pengganti}</Text>
+        </View>
         <TouchableOpacity style={styles.modalButton} onPress={onClose}>
           <Text style={styles.modalButtonText}>Tutup</Text>
         </TouchableOpacity>
@@ -178,6 +168,22 @@ const styles = StyleSheet.create({
   start: {
     color: Color.Green,
   },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "80%",
+  },
+  label: {
+    fontFamily: Font["Poppins-Medium"],
+    fontSize: 17,
+    color: Color.Black,
+  },
+  value: {
+    fontFamily: Font["Poppins-Bold"],
+    fontSize: 17,
+    color: Color.Black,
+  },
+
   // RULES
   rulesContainer: {
     flex: 1,

@@ -55,6 +55,9 @@ const LoginScreen = () => {
           Login
         </Button>
       </View>
+      <View style={styles.versionContainer}>
+        <Text style={styles.versionText}>Version 1.0.0</Text>
+      </View>
       <Modal animationType="slide" visible={showModal}>
         <LoginModal hideModal={() => setShowModal(false)} />
       </Modal>
@@ -74,7 +77,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingTop: 20,
+    paddingTop: 10,
   },
   headerLogo: {
     display: "flex",
@@ -133,7 +136,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
 
-  //button
+  //Button
   buttonContainer: {
     gap: 15,
     marginTop: 80,
@@ -161,5 +164,18 @@ const styles = StyleSheet.create({
     fontFamily: Font["Poppins-Bold"],
     fontSize: 16,
     color: Color.Primary,
+  },
+
+  //Version
+  versionContainer: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 10,
+    alignItems: "center",
+  },
+  versionText: {
+    fontSize: 15,
+    fontFamily: Font["Poppins-Regular"],
   },
 });

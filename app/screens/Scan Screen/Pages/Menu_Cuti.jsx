@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
 
 import Color from "../../../utils/Color";
 import Font from "../../../utils/Font";
@@ -15,8 +14,7 @@ const ListMenuCuti = ({ title, iconName, onPress }) => {
   );
 };
 
-export default function Menu_Cuti() {
-  const navigation = useNavigation();
+export default function Menu_Cuti({ navigation }) {
 
   return (
     <View style={styles.container}>

@@ -4,13 +4,12 @@ import {
   Text,
   Modal,
   TouchableOpacity,
-  ScrollView,
   StyleSheet,
 } from "react-native";
 import LottieView from "lottie-react-native";
-import { AntDesign } from "@expo/vector-icons";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
+
 import Collection from "../../utils/Collection";
 import Font from "../../utils/Font";
 import Color from "../../utils/Color";

@@ -1,6 +1,7 @@
 import { StyleSheet, View, Dimensions } from "react-native";
 import React from "react";
 import { Line, Svg } from "react-native-svg";
+
 import Color from "../../../utils/Color";
 
 const { width, height } = Dimensions.get("window");

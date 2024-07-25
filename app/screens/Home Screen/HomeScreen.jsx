@@ -25,7 +25,6 @@ const HomeScreen = () => {
   useEffect(() => {
     const loadUserData = async () => {
       try {
-        // Menunda pemanggilan API selama 3 detik untuk melihat efek shimmer
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
         const userData = await AsyncStorage.getItem("userData");
@@ -91,8 +90,14 @@ const HomeScreen = () => {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Color.White },
-  mainContainer: { backgroundColor: Color.Primary, paddingBottom: "10%" },
+  container: {
+    flex: 1,
+    backgroundColor: Color.White,
+  },
+  mainContainer: {
+    backgroundColor: Color.Primary,
+    paddingBottom: "10%",
+  },
   shimmerHeader: {
     width: "100%",
     height: 100,

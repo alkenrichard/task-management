@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Card, Paragraph, Title } from "react-native-paper";
+
 import Heading from "../../../components/Heading";
 
 import Font from "../../../utils/Font";

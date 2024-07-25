@@ -109,7 +109,7 @@ const Izin_Khusus = () => {
 
       try {
         const response = await axios.post(
-          `https://devbpkpenaburjakarta.my.id/api_Login/Absen.php`,
+          `https://devbpkpenaburjakarta.my.id/api_Login/Izin.php`,
           payload,
           { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
         );

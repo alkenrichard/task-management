@@ -1,12 +1,15 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, ScrollView, Image } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Calendar } from "react-native-calendars";
 import moment from "moment";
 import axios from "axios";
+import Icon from "react-native-vector-icons/MaterialIcons";
+
+import Heading from "../../components/Heading";
 
 import Font from "../../utils/Font";
 import Color from "../../utils/Color";
-import Heading from "../../components/Heading";
+import Collection from "../../utils/Collection";
 
 const CalendarScreen = () => {
   const today = moment().format("YYYY-MM-DD");
@@ -36,11 +39,18 @@ const CalendarScreen = () => {
       if (holidaysData.response && holidaysData.response.holidays) {
         holidaysData.response.holidays.forEach((holiday) => {
           const date = moment(holiday.date.iso).format("YYYY-MM-DD");
-          marked[date] = {
-            marked: true,
-            dotColor: Color.Red,
-            event: { name: holiday.name, time: "", description: "" },
-          };
+          if (!marked[date]) {
+            marked[date] = {
+              marked: true,
+              dotColor: Color.Red,
+              events: [],
+            };
+          }
+          marked[date].events.push({
+            name: holiday.name,
+            time: "-",
+            description: "-",
+          });
         });
       }
 
@@ -51,18 +61,19 @@ const CalendarScreen = () => {
             const endDate = moment(range.end);
             while (currentDate <= endDate) {
               const date = currentDate.format("YYYY-MM-DD");
-              if (marked[date]) {
-                marked[date].dotColor = Color.Blue; // Kombinasikan titik jika ada libur dan acara pada hari yang sama
-                marked[date].event.name += `, ${event.title}`;
-                marked[date].event.time += `, ${event.host}`;
-                marked[date].event.description += `, ${event.description}`;
-              } else {
+              if (!marked[date]) {
                 marked[date] = {
                   marked: true,
                   dotColor: event.color,
-                  event: { name: event.title, time: event.host },
+                  events: [],
                 };
               }
+              marked[date].events.push({
+                name: event.title,
+                time: event.host,
+                description: event.description,
+                color: event.color,
+              });
               currentDate = currentDate.add(1, "days");
             }
           });
@@ -79,6 +90,10 @@ const CalendarScreen = () => {
     setSelectedDate(day.dateString);
   };
 
+  const stripHtmlTags = (str) => {
+    return str.replace(/<[^>]*>?/gm, "");
+  };
+
   return (
     <View style={styles.container}>
       <Heading text={"Schedule"} />
@@ -89,23 +104,49 @@ const CalendarScreen = () => {
         markingType="simple"
         markedDates={markedDates}
       />
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>
-          {markedDates[selectedDate]
-            ? markedDates[selectedDate].event.name
-            : "No schedule"}
-        </Text>
-        <Text style={styles.cardText}>
-          {markedDates[selectedDate]
-            ? `${markedDates[selectedDate].event.time}`
-            : ""}
-        </Text>
-        <Text style={styles.cardText}>
-          {markedDates[selectedDate]
-            ? `${markedDates[selectedDate].event.description}`
-            : ""}
-        </Text>
-      </View>
+      <ScrollView style={styles.scrollContainer}>
+        <View style={styles.card}>
+          {markedDates[selectedDate] &&
+          markedDates[selectedDate].events &&
+          markedDates[selectedDate].events.length > 0 ? (
+            markedDates[selectedDate].events.map((event, index) => (
+              <View key={index} style={styles.eventContainer}>
+                <View style={styles.eventDetail}>
+                  <Text
+                    style={[
+                      styles.cardTitle,
+                      { color: event.color || Color.Primary },
+                    ]}
+                  >
+                    {event.name}
+                  </Text>
+                </View>
+                <View style={styles.eventDetail}>
+                  <Icon name="access-time" size={20} color={Color.GreyText} />
+                  <Text style={styles.cardText}>{event.time}</Text>
+                </View>
+                <View style={styles.eventDetail}>
+                  <Icon name="description" size={20} color={Color.GreyText} />
+                  <Text style={styles.cardText}>
+                    {stripHtmlTags(event.description)}
+                  </Text>
+                </View>
+                {index < markedDates[selectedDate].events.length - 1 && (
+                  <View style={styles.divider} />
+                )}
+              </View>
+            ))
+          ) : (
+            <View style={styles.noScheduleContainer}>
+              <Image
+                source={Collection.NoSchedule}
+                style={styles.imageNoSchedule}
+              />
+              <Text style={styles.textNoSchedule}>No schedule</Text>
+            </View>
+          )}
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -125,6 +166,10 @@ const styles = StyleSheet.create({
   calendar: {
     borderRadius: 12,
     elevation: 2,
+    marginTop: 10,
+  },
+  scrollContainer: {
+    flex: 1,
     marginTop: 20,
   },
   card: {
@@ -132,15 +177,40 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 16,
     marginTop: 20,
+    marginBottom: 10,
     elevation: 2,
+  },
+  eventDetail: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 2,
   },
   cardTitle: {
     fontFamily: Font["Poppins-Bold"],
     fontSize: 18,
-    color: Color.Primary,
   },
   cardText: {
     fontFamily: Font["Poppins-Regular"],
     fontSize: 14,
+    marginLeft: 5,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: Color.GreyText,
+    marginVertical: 20,
+  },
+  noScheduleContainer: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  imageNoSchedule: {
+    width: 200,
+    height: 200,
+  },
+  textNoSchedule: {
+    fontFamily: Font["Poppins-Bold"],
+    fontSize: 20,
+    color: Color.GreyText,
   },
 });

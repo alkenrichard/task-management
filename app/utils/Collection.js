@@ -3,6 +3,7 @@ const Collection = {
   Logo: require("../../assets/images/Logo-Master-SIM-73.png"),
   //   icon: require("../assets/images/Icon-BPK.png"),
   Error: require("../../assets/images/404.png"),
+  NoSchedule: require("../../assets/images/no_schedule.png"),
   Profile: require("../../assets/images/Profile.png"),
 
   //Events

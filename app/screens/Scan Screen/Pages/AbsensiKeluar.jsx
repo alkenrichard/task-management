@@ -5,13 +5,15 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
-import { Button } from "react-native-paper";
+
+import ModalSuccess from "../../../components/Modals/Modal_Success";
+import { LogoutModal } from "../../../components/Modals/Modal_Profile";
+import ModalFailed from "../../../components/Modals/Modal_Failed";
+
 import Color from "../../../utils/Color";
 import Font from "../../../utils/Font";
-import ModalAlert from "../../../components/Modals/ModalAlert";
-import { LogoutModal } from "../../../components/Modals/Modal_Profile";
 
-export default function AbsensiKeluar({ navigation }) {
+export default function AbsensiKeluar() {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -100,9 +102,8 @@ export default function AbsensiKeluar({ navigation }) {
           setModalVisible(true);
           console.log(response.data.message);
         } else {
-          setModalMessage(response.data.message);
+          setModalMessage("Kamu belum melakukan presensi masuk");
           setModalVisible(true);
-          console.error(response.data.message);
         }
       } else {
         setModalMessage("Data user tidak tersedia");
@@ -141,10 +142,7 @@ export default function AbsensiKeluar({ navigation }) {
         <Text style={styles.dateText}>{formatDate}</Text>
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          onPress={handleButtonPress}
-          style={styles.button}
-        >
+        <TouchableOpacity onPress={handleButtonPress} style={styles.button}>
           <View style={styles.iconContainer}>
             <MaterialCommunityIcons
               name="gesture-double-tap"
@@ -162,7 +160,12 @@ export default function AbsensiKeluar({ navigation }) {
         onConfirm={handleConfirm}
         onCancel={() => setConfirmModalVisible(false)}
       />
-      <ModalAlert
+      <ModalSuccess
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        message={modalMessage}
+      />
+      <ModalFailed
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
         message={modalMessage}

@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Keyboard } from "react-native";
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 
+import AppsNavigation from "./AppsNavigation";
 import CalendarScreen from "../screens/Calendar Screen/CalendarScreen";
 import HomeNavigation from "./HomeNavigation";
 import ScanNavigation from "./ScanNavigation";
@@ -11,7 +12,6 @@ import ProfileNavigation from "./ProfileNavigation";
 
 import Font from "../utils/Font";
 import Color from "../utils/Color";
-import AppsNvigation from "./AppsNavigation";
 
 const Tab = createBottomTabNavigator();
 
@@ -43,7 +43,7 @@ const TabNavigation = () => {
       />
       <Tab.Screen
         name="AppsScreen"
-        component={AppsNvigation}
+        component={AppsNavigation}
         options={{
           tabBarLabel: ({ color }) => (
             <Text style={[{ color: color }, styles.textNavigation]}>Apps</Text>

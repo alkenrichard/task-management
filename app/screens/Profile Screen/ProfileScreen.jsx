@@ -5,7 +5,6 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Alert,
 } from "react-native";
 import {
   AntDesign,
@@ -14,14 +13,13 @@ import {
   Octicons,
 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { FontAwesome6 } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import Heading from "../../components/Heading";
 import { LogoutModal } from "../../components/Modals/Modal_Profile";
 
 import Color from "../../utils/Color";
 import Font from "../../utils/Font";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import Collection from "../../utils/Collection";
 
 const ProfileScreen = () => {
