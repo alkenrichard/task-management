@@ -2,24 +2,26 @@
   "expo": {
     "name": "absensi-penabur-app",
     "slug": "absensi-penabur-app",
+    "platforms": ["ios", "android", "web"],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/images/Icon-SAS.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/images/Logo-Master-SIM-73.png",
-      "resizeMode": "center",
+      "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "icon": "./assets/images/Icon-SAS.png"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/Logo-Master-SIM-73.png",
+        "foregroundImage": "./assets/images/Icon-SAS.png",
         "backgroundColor": "#ffffff"
       },
       "permissions": [
@@ -29,7 +31,7 @@
       "package": "com.dwiks.absensipenaburapp"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/images/Icon-SAS.png"
     },
     "plugins": [
       "expo-font",
