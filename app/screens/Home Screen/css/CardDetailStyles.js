@@ -9,33 +9,30 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    height: 200,
-    marginBottom: 20,
+    height: 400,
+    resizeMode: "contain",
   },
   content: {
-    marginBottom: 20,
-    paddingHorizontal: 20,
+    marginTop: -20,
+    backgroundColor: Color.White,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    padding: 20,
+    shadowColor: Color.Black,
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: -2 },
+    shadowRadius: 5,
+    elevation: 5,
   },
   title: {
     fontFamily: Font["Poppins-Medium"],
     fontSize: 24,
-    marginBottom: 10,
+    marginBottom: 12,
   },
   description: {
     fontFamily: Font["Poppins-Regular"],
     fontSize: 16,
-    textAlign: "justify",
-  },
-  backButton: {
-    position: "absolute",
-    zIndex: 1,
-    padding: 20,
-    paddingTop: 30,
-  },
-  backButtonText: {
-    fontFamily: Font["Poppins-Regular"],
-    fontSize: 16,
-    color: Color.White,
+    color: Color.GreyText,
   },
 });
 

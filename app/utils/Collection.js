@@ -6,10 +6,18 @@ const Collection = {
   NoSchedule: require("../../assets/images/no_schedule.png"),
   Profile: require("../../assets/images/default-profile.jpg"),
 
+  //Inspiration
+  Inspiration1: require("../../assets/images/inspirations/event1.png"),
+  Inspiration2: require("../../assets/images/inspirations/event2.png"),
+  Inspiration3: require("../../assets/images/inspirations/event3.png"),
+
+  //News
+  News1: require("../../assets/images/news/Juni 2024_Jangan lupa pakai tiket.jpg"),
+  News2: require("../../assets/images/news/Juli 2024_Jangan lupa pakai tiket.jpg"),
+
   //Events
-  Event1: require("../../assets/images/events/event1.png"),
-  Event2: require("../../assets/images/events/event2.png"),
-  Event3: require("../../assets/images/events/event3.png"),
+  Event1: require("../../assets/images/events/Juni 2024_ITN.jpg"),
+  Event2: require("../../assets/images/events/Juli 2024_ITN.jpg"),
 
   //Services
   Payroll: require("../../assets/images/services/payroll.png"),

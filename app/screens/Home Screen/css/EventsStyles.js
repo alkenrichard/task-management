@@ -1,28 +1,11 @@
 import { StyleSheet } from "react-native";
-import Font from "../../../utils/Font";
 import Color from "../../../utils/Color";
+import Font from "../../../utils/Font";
 
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     paddingHorizontal: 20,
-  },
-  searchBarContainer: {
-    marginTop: 20,
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    gap: 10,
-    marginBottom: 5,
-  },
-  textInput: {
-    width: "85%",
-    padding: 7,
-    paddingHorizontal: 16,
-    borderRadius: 30,
-    fontSize: 16,
-    fontFamily: Font["Poppins-Regular"],
-    backgroundColor: Color.White,
   },
   cardContainer: {
     paddingVertical: 8,
@@ -31,20 +14,32 @@ const styles = StyleSheet.create({
     width: 350,
     marginBottom: 16,
     marginRight: 16,
-    marginBottom: 16,
+    backgroundColor: Color.White,
+    borderRadius: 10,
+    overflow: "hidden",
+    elevation: 3,
+    shadowColor: Color.Black,
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 5,
   },
-  cardCover: {
-    width: 350,
-    height: 170,
+  cardImage: {
+    width: "100%",
+    height: 200,
+    resizeMode: "cover",
   },
   cardContent: {
-    marginTop: 8,
+    padding: 16,
   },
   cardTitle: {
     fontFamily: Font["Poppins-Medium"],
+    fontSize: 18,
+    marginBottom: 8,
   },
   cardDesc: {
     fontFamily: Font["Poppins-Regular"],
+    fontSize: 14,
+    color: Color.GreyText,
   },
 });
 

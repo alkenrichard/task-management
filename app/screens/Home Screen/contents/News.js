@@ -3,40 +3,53 @@ import {
   View,
   FlatList,
   TouchableWithoutFeedback,
+  Image,
+  Text,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { Card, Paragraph, Title } from "react-native-paper";
 
 import Heading from "../../../components/Heading";
 
 import Collection from "../../../utils/Collection";
 import styles from "../css/NewsStyles";
 
-const data = [
+const newsletterDescription = `Hai teman-teman dan rekan IT Evangelist BPK PENABUR Jakarta yang tertarik dengan teknologi! 🚀
+
+Kami punya program spesial untuk kalian, IT Newsletter bulanan yang berisi artikel menarik seputar pengetahuan umum dan perkembangan terbaru dalam dunia teknologi komputer. 📰
+
+Bikin Sertifikat Keren dengan Cepat di Canva! 🎓✨ Dalam artikel ini, kita akan membahas cara mudah dan cepat membuat sertifikat menggunakan Canva. Bagi guru dan karyawan, ini adalah solusi praktis untuk memberikan apresiasi kepada siswa atau rekan kerja. Yuk, tingkatkan kreativitasmu dengan Canva! 🚀💼
+
+Penasaran? Jangan lewatkan kesempatan untuk menyimak informasi terbaru ini! 👀
+
+Tanpa basa-basi, yuk langsung cek artikel di bawah ini! 🚀
+
+Dan tentunya, jangan ragu untuk:
+✔ Memberikan "Like" untuk konten yang menarik ini
+✔ Simpan untuk referensi di masa mendatang
+✔ Bagikan kepada teman-temanmu agar mereka juga bisa mendapatkan manfaat dari informasi berharga ini! 🌐💡
+
+Jadi, tunggu apa lagi? Ayo, mari bersama-sama menggali ilmu pengetahuan! 😁🔍
+
+@bpkpenaburjakarta
+@bpkpenaburofficial
+`;
+
+const dataNews = [
   {
     id: 1,
-    title: "Event 1",
-    description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the",
-    image: Collection.Event1,
+    title: "Juni - IT Newsletter",
+    description: newsletterDescription,
+    image: Collection.News1,
   },
   {
     id: 2,
-    title: "Event 2",
-    description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the",
-    image: Collection.Event2,
-  },
-  {
-    id: 3,
-    title: "Event 3",
-    description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the",
-    image: Collection.Event3,
+    title: "Juli - IT Newsletter",
+    description: newsletterDescription,
+    image: Collection.News2,
   },
 ];
 
-const EventCard = ({ title, description, image }) => {
+const NewsCard = ({ title, description, image }) => {
   const navigation = useNavigation();
   return (
     <TouchableWithoutFeedback
@@ -44,15 +57,15 @@ const EventCard = ({ title, description, image }) => {
         navigation.navigate("CardDetail", { title, description, image })
       }
     >
-      <Card style={styles.card}>
-        <Card.Cover source={image} style={styles.cardCover} />
-        <Card.Content style={styles.cardContent}>
-          <Title style={styles.cardTitle}>{title}</Title>
-          <Paragraph style={styles.cardDesc}>
+      <View style={styles.card}>
+        <Image source={image} style={styles.cardImage} />
+        <View style={styles.cardContent}>
+          <Text style={styles.cardTitle}>{title}</Text>
+          <Text style={styles.cardDesc}>
             {truncateDescription(description)}
-          </Paragraph>
-        </Card.Content>
-      </Card>
+          </Text>
+        </View>
+      </View>
     </TouchableWithoutFeedback>
   );
 };
@@ -71,11 +84,11 @@ export default function News() {
       <View>
         <Heading text={"Berita"} />
         <FlatList
-          data={data}
+          data={dataNews}
           horizontal
           showsHorizontalScrollIndicator={false}
           renderItem={({ item }) => (
-            <EventCard
+            <NewsCard
               title={item.title}
               description={item.description}
               image={item.image}

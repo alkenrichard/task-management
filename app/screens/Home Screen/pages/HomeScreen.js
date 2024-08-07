@@ -8,10 +8,10 @@ import Header from "../contents/Header";
 import Inspiration from "../contents/Inspiration";
 import Wrap from "../contents/Wrap";
 import ListServices from "../contents/ListServices";
-import Announcement from "../contents/Announcement";
 import Events from "../contents/Events";
 
 import styles from "../css/HomeScreenStyles";
+import News from "../contents/News";
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -34,7 +34,7 @@ const HomeScreen = () => {
         } else {
           console.error("No user data found");
         }
-      } catch (error) {
+      }  catch (error) {
         console.error("Failed to load user data:", error);
       } finally {
         setLoading(false);
@@ -81,7 +81,7 @@ const HomeScreen = () => {
       </View>
       <Wrap user={user} />
       <ListServices />
-      <Announcement />
+      <News />
       <Events />
     </ScrollView>
   );

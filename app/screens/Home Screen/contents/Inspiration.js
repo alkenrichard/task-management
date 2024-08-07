@@ -19,15 +19,15 @@ const cardMargin = 20;
 const data = [
   {
     id: 1,
-    image: Collection.Event1,
+    image: Collection.Inspiration1,
   },
   {
     id: 2,
-    image: Collection.Event2,
+    image: Collection.Inspiration2,
   },
   {
     id: 3,
-    image: Collection.Event3,
+    image: Collection.Inspiration3,
   },
 ];
 

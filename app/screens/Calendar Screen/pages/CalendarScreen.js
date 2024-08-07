@@ -4,6 +4,8 @@ import { Calendar } from "react-native-calendars";
 import moment from "moment";
 import axios from "axios";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { format } from "date-fns"
+import { id } from "date-fns/locale";
 
 import Heading from "../../../components/Heading";
 
@@ -17,6 +19,7 @@ const CalendarScreen = () => {
   const countryCode = "ID";
   const [markedDates, setMarkedDates] = useState({});
   const [selectedDate, setSelectedDate] = useState(today);
+  const formattedDate = format(selectedDate, "EEEE, d MMMM yyyy", { locale: id });
 
   useEffect(() => {
     fetchHolidaysAndEvents();
@@ -157,7 +160,7 @@ const CalendarScreen = () => {
         markedDates={markedDates}
       />
       <View style={styles.dateContainer}>
-        <Text style={styles.dateText}>{selectedDate}</Text>
+        <Text style={styles.dateText}>{formattedDate}</Text>
       </View>
 
       <ScrollView
