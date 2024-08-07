@@ -5,7 +5,7 @@ import Collection from "../../../utils/Collection";
 import styles from "../css/HeaderStyles";
 
 export default function Header({ user }) {
-  const firstName = user.nama_lengkap.split(" ")[0];
+  const firstName = user?.nama_lengkap?.split(" ")[0] || "";
 
   return (
     <View style={styles.container}>

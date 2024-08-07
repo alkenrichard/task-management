@@ -16,37 +16,68 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     elevation: 2,
     marginTop: 10,
+    borderWidth: 2,
+    borderColor: Color.Primary,
+  },
+  dateContainer: {
+    marginTop: 20,
+  },
+  dateText: {
+    fontFamily: "Poppins-Bold",
+    fontSize: 20,
+    color: Color.Primary,
+    textAlign: "center",
   },
   scrollContainer: {
     flex: 1,
     marginTop: 20,
   },
   card: {
-    backgroundColor: "white",
-    borderRadius: 8,
+    backgroundColor: Color.White,
     padding: 16,
-    marginTop: 20,
+    borderRadius: 12,
     marginBottom: 10,
     elevation: 2,
+    borderWidth: 2,
+    borderColor: Color.Primary,
+  },
+  eventContainer: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    marginBottom: 10,
+  },
+  timeline: {
+    alignItems: "center",
+    marginRight: 10,
+  },
+  circle: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: Color.Primary,
+    marginVertical: 12,
+  },
+  line: {
+    width: 2,
+    flex: 1,
+    backgroundColor: Color.GreyText,
+  },
+  eventContent: {
+    flex: 1,
+    flexDirection: "column",
   },
   eventDetail: {
     flexDirection: "row",
-    alignItems: "center",
     marginVertical: 2,
   },
   cardTitle: {
-    fontFamily: Font["Poppins-Bold"],
+    fontFamily: "Poppins-Bold",
     fontSize: 18,
   },
   cardText: {
-    fontFamily: Font["Poppins-Regular"],
+    fontFamily: "Poppins-Regular",
     fontSize: 14,
     marginLeft: 5,
-  },
-  divider: {
-    height: 1,
-    backgroundColor: Color.GreyText,
-    marginVertical: 20,
   },
   noScheduleContainer: {
     flexDirection: "column",
@@ -58,7 +89,7 @@ const styles = StyleSheet.create({
     height: 200,
   },
   textNoSchedule: {
-    fontFamily: Font["Poppins-Bold"],
+    fontFamily: "Poppins-Bold",
     fontSize: 20,
     color: Color.GreyText,
   },

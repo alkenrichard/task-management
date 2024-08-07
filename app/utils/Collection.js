@@ -4,7 +4,7 @@ const Collection = {
   //   icon: require("../assets/images/Icon-BPK.png"),
   Error: require("../../assets/images/404.png"),
   NoSchedule: require("../../assets/images/no_schedule.png"),
-  Profile: require("../../assets/images/Profile.png"),
+  Profile: require("../../assets/images/default-profile.jpg"),
 
   //Events
   Event1: require("../../assets/images/events/event1.png"),

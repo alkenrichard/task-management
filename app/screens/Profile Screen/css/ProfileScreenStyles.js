@@ -38,6 +38,8 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
+    borderWidth: 0.5,
+    borderColor: Color.Black,
   },
   mainListContainer: {
     marginTop: 10,

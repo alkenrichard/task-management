@@ -29,10 +29,10 @@ const CalendarScreen = () => {
 
   const fetchHolidaysAndEvents = async () => {
     try {
-      const holidaysResponse = await axios.get(
-        `https://calendarific.com/api/v2/holidays?&api_key=${apiKey}&country=${countryCode}&year=2024`
-      );
-      const holidaysData = holidaysResponse.data;
+      // const holidaysResponse = await axios.get(
+      //   `https://calendarific.com/api/v2/holidays?&api_key=${apiKey}&country=${countryCode}&year=2024`
+      // );
+      // const holidaysData = holidaysResponse.data;
 
       const companyEventsResponse = await axios.get(
         "https://calendar.devbpkpenaburjakarta.my.id/api/event"
@@ -41,23 +41,23 @@ const CalendarScreen = () => {
 
       const marked = {};
 
-      if (holidaysData.response && holidaysData.response.holidays) {
-        holidaysData.response.holidays.forEach((holiday) => {
-          const date = moment(holiday.date.iso).format("YYYY-MM-DD");
-          if (!marked[date]) {
-            marked[date] = {
-              marked: true,
-              dotColor: Color.Red,
-              events: [],
-            };
-          }
-          marked[date].events.push({
-            name: holiday.name,
-            time: "-",
-            description: "-",
-          });
-        });
-      }
+      // if (holidaysData.response && holidaysData.response.holidays) {
+      //   holidaysData.response.holidays.forEach((holiday) => {
+      //     const date = moment(holiday.date.iso).format("YYYY-MM-DD");
+      //     if (!marked[date]) {
+      //       marked[date] = {
+      //         marked: true,
+      //         dotColor: Color.Red,
+      //         events: [],
+      //       };
+      //     }
+      //     marked[date].events.push({
+      //       name: holiday.name,
+      //       time: "-",
+      //       description: "-",
+      //     });
+      //   });
+      // }
 
       if (companyEventsData.success && companyEventsData.data) {
         companyEventsData.data.forEach((event) => {
@@ -156,36 +156,48 @@ const CalendarScreen = () => {
         markingType="simple"
         markedDates={markedDates}
       />
-      <ScrollView style={styles.scrollContainer}>
+      <View style={styles.dateContainer}>
+        <Text style={styles.dateText}>{selectedDate}</Text>
+      </View>
+
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={styles.scrollContainer}
+      >
         <View style={styles.card}>
           {markedDates[selectedDate] &&
           markedDates[selectedDate].events &&
           markedDates[selectedDate].events.length > 0 ? (
             markedDates[selectedDate].events.map((event, index) => (
               <View key={index} style={styles.eventContainer}>
-                <View style={styles.eventDetail}>
-                  <Text
-                    style={[
-                      styles.cardTitle,
-                      { color: event.color || Color.Primary },
-                    ]}
-                  >
-                    {event.name}
-                  </Text>
+                <View style={styles.timeline}>
+                  <View style={styles.circle} />
+                  {index < markedDates[selectedDate].events.length - 1 && (
+                    <View style={styles.line} />
+                  )}
                 </View>
-                <View style={styles.eventDetail}>
-                  <Icon name="access-time" size={20} color={Color.GreyText} />
-                  <Text style={styles.cardText}>{event.time}</Text>
+                <View style={styles.eventContent}>
+                  <View style={styles.eventDetail}>
+                    <Text
+                      style={[
+                        styles.cardTitle,
+                        { color: event.color || Color.Primary },
+                      ]}
+                    >
+                      {event.name}
+                    </Text>
+                  </View>
+                  <View style={styles.eventDetail}>
+                    <Icon name="access-time" size={20} color={Color.GreyText} />
+                    <Text style={styles.cardText}>{event.time}</Text>
+                  </View>
+                  <View style={styles.eventDetail}>
+                    <Icon name="description" size={20} color={Color.GreyText} />
+                    <Text style={styles.cardText}>
+                      {stripHtmlTags(event.description)}
+                    </Text>
+                  </View>
                 </View>
-                <View style={styles.eventDetail}>
-                  <Icon name="description" size={20} color={Color.GreyText} />
-                  <Text style={styles.cardText}>
-                    {stripHtmlTags(event.description)}
-                  </Text>
-                </View>
-                {index < markedDates[selectedDate].events.length - 1 && (
-                  <View style={styles.divider} />
-                )}
               </View>
             ))
           ) : (

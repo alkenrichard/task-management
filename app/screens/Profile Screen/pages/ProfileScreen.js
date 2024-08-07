@@ -73,7 +73,6 @@ const ProfileScreen = () => {
       <View style={styles.mainProfileContainer}>
         <View style={styles.subProfileContainer}>
           <Image source={Collection.Profile} style={styles.userImage} />
-          {/* <FontAwesome6 name="user-large" size={24} color="black" /> */}
           <View style={styles.textProfile}>
             <Text style={styles.name}>{userData.nama_lengkap}</Text>
             <Text style={styles.gmail} numberOfLines={2}>

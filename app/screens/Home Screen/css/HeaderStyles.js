@@ -21,6 +21,8 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 30,
+    borderWidth: 0.5,
+    borderColor: Color.Black,
   },
   profileContainer: {
     display: "flex",

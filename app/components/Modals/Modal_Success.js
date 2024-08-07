@@ -6,7 +6,15 @@ import Color from "../../utils/Color";
 import Font from "../../utils/Font";
 import Collection from "../../utils/Collection";
 
-export const ModalSuccess = ({ visible, onClose, message }) => {
+export const ModalSuccess = ({ visible, onClose, message, onNavigate }) => {
+  
+  const handlePress = () => {
+    if(onNavigate){
+      onNavigate();
+    }
+    onClose();
+  }
+  
   return (
     <Modal
       animationType="fade"
@@ -23,7 +31,7 @@ export const ModalSuccess = ({ visible, onClose, message }) => {
             loop
           />
           <Text style={styles.modalText}>{message}</Text>
-          <TouchableOpacity style={styles.modalButton} onPress={onClose}>
+          <TouchableOpacity style={styles.modalButton} onPress={handlePress}>
             <Text style={styles.modalButtonText}>OK</Text>
           </TouchableOpacity>
         </View>

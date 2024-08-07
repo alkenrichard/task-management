@@ -5,13 +5,15 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
+import { useNavigation } from "@react-navigation/native";
 
 import ModalSuccess from "../../../components/Modals/Modal_Success";
+import ModalFailed from "../../../components/Modals/Modal_Failed";
 import { LogoutModal } from "../../../components/Modals/Modal_Profile";
+import { sendPresensiKeluar } from "../../../api/attendance";
 
 import Color from "../../../utils/Color";
 import styles from "../css/PresensiKeluarStyles";
-import ModalFailed from "../../../components/Modals/Modal_Failed";
 
 export default function Presensi_Keluar() {
   const [modalVisible, setModalVisible] = useState(false);
@@ -22,6 +24,10 @@ export default function Presensi_Keluar() {
   const [userData, setUserData] = useState(null);
   const [absenKeluarTime, setAbsenKeluarTime] = useState(null);
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
+  const navigation = useNavigation();
+  const handleNavigate = () => {
+    navigation.navigate("scan");
+  }
 
   useEffect(() => {
     const loadUserData = async () => {
@@ -71,53 +77,6 @@ export default function Presensi_Keluar() {
     return () => clearInterval(timer);
   }, []);
 
-  const sendAbsensiKeluar = async () => {
-    try {
-      if (userData) {
-        const payload = {
-          nik: userData.nik,
-        };
-        const response = await axios.put(
-          "https://devbpkpenaburjakarta.my.id/api_Login/Absen.php",
-          payload,
-          {
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          }
-        );
-        if (response.data.success) {
-          const currentTimeFormatted = format(new Date(), "HH:mm", {
-            locale: id,
-          });
-          const todayDate = format(new Date(), "yyyy-MM-dd");
-          await AsyncStorage.setItem(
-            `absenKeluarTime_${userData.nik}`,
-            currentTimeFormatted
-          );
-          await AsyncStorage.setItem(
-            `absenKeluarDate_${userData.nik}`,
-            todayDate
-          );
-          setAbsenKeluarTime(currentTimeFormatted);
-          setModalMessage(
-            `Absen keluar berhasil pada pukul ${currentTimeFormatted}`
-          );
-          setModalVisible(true);
-          console.log(response.data.message);
-        } else {
-          setFailedModalMessage("Kamu belum melakukan presensi masuk");
-          setFailedModalVisible(true);
-        }
-      } else {
-        setFailedModalMessage("Data user tidak tersedia");
-        setFailedModalVisible(true);
-      }
-    } catch (error) {
-      setFailedModalMessage("Terjadi kesalahan saat mengirim data presensi");
-      setFailedModalVisible(true);
-      console.error("Error sending absensi data:", error);
-    }
-  };
-
   const handleButtonPress = () => {
     if (absenKeluarTime) {
       setModalMessage(
@@ -131,7 +90,14 @@ export default function Presensi_Keluar() {
 
   const handleConfirm = () => {
     setConfirmModalVisible(false);
-    sendAbsensiKeluar();
+    sendPresensiKeluar(
+      userData,
+      setAbsenKeluarTime,
+      setModalMessage,
+      setModalVisible,
+      setFailedModalVisible,
+      setFailedModalMessage
+    );
   };
 
   const formatDate = format(currentTime, "EEEE, d MMMM yyyy", { locale: id });
@@ -166,6 +132,7 @@ export default function Presensi_Keluar() {
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
         message={modalMessage}
+        onNavigate={handleNavigate}
       />
       <ModalFailed
         visible={failedModalVisible}

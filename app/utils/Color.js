@@ -20,4 +20,11 @@ export default {
   Green: "#19A337",
 
   Pink: "#FF008A",
+
+
+  //Profile
+  label_profile: "#666",
+  value_profile: "#333",
+  eror_profile: "#FF5454",
+  
 };

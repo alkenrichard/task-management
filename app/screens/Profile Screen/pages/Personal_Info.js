@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { FlatList, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -31,14 +31,31 @@ const Personal_Info = () => {
     );
   }
 
+  const data = [
+    { label: "Nama Lengkap", value: userData.nama_lengkap },
+    { label: "NIK", value: userData.nik },
+    { label: "No HP", value: userData.nohp || " - " },
+    { label: "Email", value: userData.email_penabur },
+    { label: "Divisi", value: userData.divisi },
+    { label: "Penempatan Payroll", value: userData.penempatan_payroll },
+  ];
+
+  const renderItem = ({ item }) => (
+    <View style={styles.infoColumn}>
+      <Text style={styles.label}>{item.label}:</Text>
+      <Text style={styles.value}>{item.value}</Text>
+    </View>
+  );
+
   return (
-    <View>
-      <Text>{userData.nama_lengkap}</Text>
-      <Text>{userData.nik}</Text>
-      <Text>{userData.nohp || " - "}</Text>
-      <Text>{userData.email_penabur}</Text>
-      <Text>{userData.divisi}</Text>
-      <Text>{userData.penempatan_payroll}</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Informasi Pribadi</Text>
+      <FlatList
+        data={data}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.label}
+        showsVerticalScrollIndicator={false}
+      />
     </View>
   );
 };

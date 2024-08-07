@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Text, View, StyleSheet, Dimensions } from "react-native";
 import { CameraView, Camera } from "expo-camera";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import ModalSuccess from "../../../components/Modals/Modal_Success";
 import { BASE_ENDPOINT, ATTENDANCE_ENDPOINT } from "../../../configs/apiConfig";
@@ -10,13 +10,15 @@ import { sendPresensiMasuk } from "../../../api/attendance";
 
 const { width, height } = Dimensions.get("window");
 
-export default function CameraQR({ updateClockTimes, navigation }) {
+export default function CameraQR({ updateClockTimes }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [userData, setUserData] = useState(null);
   const [clockInTime, setClockInTime] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     const loadUserData = async () => {
@@ -85,6 +87,10 @@ export default function CameraQR({ updateClockTimes, navigation }) {
     );
   };
 
+  const handleNavigate = () => {
+    navigation.navigate("home");
+  };
+
   if (hasPermission === null) {
     return <Text>Requesting camera permission...</Text>;
   }
@@ -109,9 +115,9 @@ export default function CameraQR({ updateClockTimes, navigation }) {
         visible={modalVisible}
         onClose={() => {
           setModalVisible(false);
-          navigation.navigate("scan");
         }}
         message={modalMessage}
+        onNavigate={handleNavigate}
       />
     </View>
   );

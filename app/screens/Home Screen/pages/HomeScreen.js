@@ -11,7 +11,6 @@ import ListServices from "../contents/ListServices";
 import Announcement from "../contents/Announcement";
 import Events from "../contents/Events";
 
-import Color from "../../../utils/Color";
 import styles from "../css/HomeScreenStyles";
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);

@@ -10,14 +10,11 @@ import {
   Platform,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Button, RadioButton } from "react-native-paper";
-import LottieView from "lottie-react-native";
+import { Button } from "react-native-paper";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
 
-import Font from "../../../utils/Font";
 import Color from "../../../utils/Color";
-import Collection from "../../../utils/Collection";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { KeyboardAvoidingView } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
