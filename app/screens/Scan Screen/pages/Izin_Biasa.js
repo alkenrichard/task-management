@@ -3,7 +3,6 @@ import {
   View,
   Text,
   TextInput,
-  StyleSheet,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -16,7 +15,6 @@ import { SelectList } from "react-native-dropdown-select-list";
 import { Button } from "react-native-paper";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
-import axios from "axios";
 
 import {
   RulesModal,
@@ -25,9 +23,9 @@ import {
 } from "../../../components/Modals/Modal_Izin_Biasa";
 import { pilihanIzinBiasa } from "../../../data/IzinData";
 
-import Font from "../../../utils/Font";
 import Color from "../../../utils/Color";
-import styles from "../css/IzinBiasaStyles"
+import styles from "../css/IzinBiasaStyles";
+import { permitAPI } from "../../../api/permit";
 
 function formatDate(date) {
   return format(date, "EEEE, d MMMM yyyy", { locale: id });
@@ -124,24 +122,19 @@ const Izin_Biasa = () => {
         status: "moving",
       };
 
-      console.log("Data to be sent:", payload.toString());
+      console.log("Data to be sent:", payload);
 
       try {
-        const response = await axios.post(
-          `https://devbpkpenaburjakarta.my.id/api_Login/Izin.php`,
-          JSON.stringify(payload),
-          { headers: { "Content-Type": "application/json" } }
-        );
+        const response = await permitAPI(payload);
 
-        if (response.data.success) {
+        if (response.success) {
           setModalVisible(true);
           saveHistory(payload);
         } else {
           Alert.alert("Error", "Gagal diajukan");
         }
       } catch (error) {
-        Alert.alert("Error", "Failed to submit leave request");
-        console.error("Submission error:", error);
+        Alert.alert("Error", error.message);
       }
     }
   };

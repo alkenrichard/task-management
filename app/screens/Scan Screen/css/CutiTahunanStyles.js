@@ -19,10 +19,25 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: 12,
+    borderColor: Color.Primary, // tambahkan border color
+    borderWidth: 1, // tambahkan border width
+    justifyContent: "flex-start", // posisikan konten ke kiri
+    paddingHorizontal: 10, // tambahkan padding di kiri dan kanan
   },
   colorBtn: {
     height: 50,
     backgroundColor: Color.Primary,
+  },
+  calendarForm: {
+    height: 50,
+    flexDirection: "row", // atur agar ikon dan teks berada dalam satu baris
+    alignItems: "center", // vertikal tengah
+  },
+  calendarText: {
+    fontFamily: Font["Poppins-Bold"],
+    fontSize: 16,
+    color: Color.Primary,
+    
   },
   btnConfirm: {
     paddingTop: 20,

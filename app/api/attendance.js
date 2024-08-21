@@ -54,7 +54,6 @@ export const sendPresensiMasuk = async (
   setScanned(false);
 };
 
-
 export const sendPresensiKeluar = async (
   userData,
   setAbsenKeluarTime,

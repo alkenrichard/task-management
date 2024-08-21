@@ -9,7 +9,6 @@ import {
 import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Button } from "react-native-paper";
-import LottieView from "lottie-react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as LocalAuthentication from "expo-local-authentication";
 
@@ -66,7 +65,6 @@ export default function LoginModal({ hideModal }) {
           })
         );
 
-        // Tambahkan autentikasi biometrik di sini
         const compatible = await LocalAuthentication.hasHardwareAsync();
         if (compatible) {
           const enrolled = await LocalAuthentication.isEnrolledAsync();

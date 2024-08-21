@@ -2,7 +2,11 @@
   "expo": {
     "name": "absensi-penabur-app",
     "slug": "absensi-penabur-app",
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/Icon-SAS.png",
@@ -17,7 +21,8 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "icon": "./assets/images/Icon-SAS.png"
+      "icon": "./assets/images/Icon-SAS.png",
+      "bundleIdentifier": "com.dwiks.absensipenaburapp"
     },
     "android": {
       "adaptiveIcon": {

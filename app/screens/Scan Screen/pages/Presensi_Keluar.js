@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { format } from "date-fns";
@@ -27,7 +26,7 @@ export default function Presensi_Keluar() {
   const navigation = useNavigation();
   const handleNavigate = () => {
     navigation.navigate("scan");
-  }
+  };
 
   useEffect(() => {
     const loadUserData = async () => {

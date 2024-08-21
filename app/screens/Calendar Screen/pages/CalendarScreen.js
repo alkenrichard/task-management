@@ -32,10 +32,10 @@ const CalendarScreen = () => {
 
   const fetchHolidaysAndEvents = async () => {
     try {
-      // const holidaysResponse = await axios.get(
-      //   `https://calendarific.com/api/v2/holidays?&api_key=${apiKey}&country=${countryCode}&year=2024`
-      // );
-      // const holidaysData = holidaysResponse.data;
+      const holidaysResponse = await axios.get(
+        `https://calendarific.com/api/v2/holidays?&api_key=${apiKey}&country=${countryCode}&year=2024`
+      );
+      const holidaysData = holidaysResponse.data;
 
       const companyEventsResponse = await axios.get(
         "https://calendar.devbpkpenaburjakarta.my.id/api/event"
@@ -44,23 +44,23 @@ const CalendarScreen = () => {
 
       const marked = {};
 
-      // if (holidaysData.response && holidaysData.response.holidays) {
-      //   holidaysData.response.holidays.forEach((holiday) => {
-      //     const date = moment(holiday.date.iso).format("YYYY-MM-DD");
-      //     if (!marked[date]) {
-      //       marked[date] = {
-      //         marked: true,
-      //         dotColor: Color.Red,
-      //         events: [],
-      //       };
-      //     }
-      //     marked[date].events.push({
-      //       name: holiday.name,
-      //       time: "-",
-      //       description: "-",
-      //     });
-      //   });
-      // }
+      if (holidaysData.response && holidaysData.response.holidays) {
+        holidaysData.response.holidays.forEach((holiday) => {
+          const date = moment(holiday.date.iso).format("YYYY-MM-DD");
+          if (!marked[date]) {
+            marked[date] = {
+              marked: true,
+              dotColor: Color.Red,
+              events: [],
+            };
+          }
+          marked[date].events.push({
+            name: holiday.name,
+            time: "-",
+            description: "-",
+          });
+        });
+      }
 
       if (companyEventsData.success && companyEventsData.data) {
         companyEventsData.data.forEach((event) => {

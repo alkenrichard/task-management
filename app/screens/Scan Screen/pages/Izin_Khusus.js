@@ -16,7 +16,6 @@ import { SelectList } from "react-native-dropdown-select-list";
 import { Button } from "react-native-paper";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
-import axios from "axios";
 
 import {
   RulesModal,
@@ -26,6 +25,7 @@ import {
 import { pilihanIzinKhusus } from "../../../data/IzinData";
 import Font from "../../../utils/Font";
 import Color from "../../../utils/Color";
+import { permitAPI } from "../../../api/permit";
 
 function formatDate(date) {
   return format(date, "EEEE, d MMMM yyyy", { locale: id });
@@ -130,11 +130,7 @@ const Izin_Khusus = () => {
       console.log("Data to be sent:", payload.toString());
 
       try {
-        const response = await axios.post(
-          `https://devbpkpenaburjakarta.my.id/api_Login/Izin.php`,
-          JSON.stringify(payload),
-          { headers: { "Content-Type": "application/json" } } 
-        );
+        const response = await permitAPI(payload);
 
         if (response.data.success) {
           setModalVisible(true);
@@ -143,8 +139,7 @@ const Izin_Khusus = () => {
           Alert.alert("Error", "Gagal diajukan");
         }
       } catch (error) {
-        Alert.alert("Error", "Failed to submito leave request");
-        console.error("Submission error:", error);
+        Alert.alert("Error", error.message);
       }
     }
   };

@@ -3,8 +3,6 @@ import {
   View,
   Text,
   TextInput,
-  StyleSheet,
-  Modal,
   TouchableOpacity,
   ScrollView,
   Platform,
@@ -24,6 +22,7 @@ import {
 } from "../../../components/Modals/Modal_Cuti_Tahunan";
 
 import styles from "../css/CutiTahunanStyles";
+import { permitAPI } from "../../../api/permit";
 
 function formatDate(date) {
   return format(date, "EEEE, d MMMM yyyy", { locale: id });
@@ -32,12 +31,14 @@ function formatDate(date) {
 const Izin_Tahunan = () => {
   const [jumlahHariCuti, setJumlahHariCuti] = useState(1);
   const [tanggalMulaiCuti, setTanggalMulaiCuti] = useState(new Date());
+  const [tanggalSelesaiCuti, setTanggalSelesaiCuti] = useState(new Date());
   const [alasanCuti, setAlasanCuti] = useState("");
   const [pengganti, setPengganti] = useState("");
   const [showTanggalMulaiPicker, setShowTanggalMulaiPicker] = useState(false);
+  const [showTanggalSelesaiPicker, setShowTanggalSelesaiPicker] =
+    useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [formIncomplete, setFormIncomplete] = useState(false);
-
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
@@ -68,17 +69,67 @@ const Izin_Tahunan = () => {
     setShowTanggalMulaiPicker(false);
     setTanggalMulaiCuti(currentDate);
   };
+  
+  const onChangeTanggalSelesai = (event, selectedDate) => {
+    const currentDate = selectedDate || tanggalSelesaiCuti;
+    setShowTanggalSelesaiPicker(false);
+    setTanggalSelesaiCuti(currentDate);
+  };
 
   const showTanggalMulaiPickerModal = () => {
     setShowTanggalMulaiPicker(true);
   };
 
-  const submitForm = () => {
+  const showTanggalSelesaiPickerModal = () => {
+    setShowTanggalSelesaiPicker(true);
+  };
+
+  const saveHistory = async (data) => {
+    try {
+      const historKey = `history_${userData.nik}`;
+      const history = await AsyncStorage.getItem(historKey);
+      const parsedHistory = history ? JSON.parse(history) : [];
+      parsedHistory.push(data);
+      await AsyncStorage.setItem(historKey, JSON.stringify(parsedHistory));
+    } catch (error) {
+      console.error("Failed to save history:", error);
+    }
+  };
+
+  const submitForm = async () => {
     if (!jumlahHariCuti || !tanggalMulaiCuti || !alasanCuti || !pengganti) {
       setFormIncomplete(true);
     } else {
       setFormIncomplete(false);
       setModalVisible(true);
+
+      const payload = {
+        nik: userData.nik,
+        nama_lengkap: userData.nama_lengkap,
+        kode_bagian: userData.divisi,
+        kode_izin_masuk: "CTH",
+        alasanCuti: alasanCuti,
+        pengganti: pengganti,
+        tanggal_mulai_izin: formatDate(tanggalMulaiCuti, "yyyy-MM-dd"),
+        tanggal_selesai_izin: format(tanggalSelesaiCuti, "yyyy-MM-dd"),
+        tanggal_pengajuan: new Date().toLocaleString(),
+        status: "moving",
+      };
+
+      console.log("Data to be sent:", payload.toString());
+
+      try {
+        const response = await permitAPI(payload);
+
+        if (response.data.success) {
+          setModalVisible(true);
+          saveHistory(payload);
+        } else {
+          Alert.alert("Error", "Gagal diajukan");
+        }
+      } catch (error) {
+        Alert.alert("Error", error.message);
+      }
     }
   };
 
@@ -112,6 +163,65 @@ const Izin_Tahunan = () => {
         </View>
 
         <View style={styles.form}>
+          <Text style={styles.label}>Tanggal Mulai Cuti:</Text>
+          <Button
+            style={styles.button}
+            contentStyle={styles.calendarForm}
+            labelStyle={styles.calendarText}
+            mode="outlined"
+            icon={() => (
+              <MaterialCommunityIcons
+                name="calendar"
+                size={24}
+                color={Color.Primary}
+              />
+            )}
+            onPress={showTanggalMulaiPickerModal}
+          >
+            {formatDate(tanggalMulaiCuti)}
+          </Button>
+          {showTanggalMulaiPicker && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={tanggalMulaiCuti}
+              mode="date"
+              display="default"
+              onChange={onChangeTanggalMulai}
+            />
+          )}
+        </View>
+
+        <View style={styles.form}>
+          <Text style={styles.label}>Tanggal Selesai Cuti:</Text>
+          <Button
+            style={styles.button}
+            contentStyle={styles.colorBtn}
+            labelStyle={styles.textBtn}
+            mode="contained"
+            icon={() => (
+              <MaterialCommunityIcons
+                name="calendar"
+                size={24}
+                color={Color.White}
+              />
+            )}
+            onPress={showTanggalSelesaiPickerModal}
+          >
+            {formatDate(tanggalSelesaiCuti)}
+          </Button>
+          {showTanggalSelesaiPicker && (
+            <DateTimePicker
+              style={styles.form}
+              testID="dateTimePicker"
+              value={tanggalSelesaiCuti}
+              mode="date"
+              display="default"
+              onChange={onChangeTanggalSelesai}
+            />
+          )}
+        </View>
+
+        <View style={styles.form}>
           <Text style={styles.label}>Jumlah Hari Cuti:</Text>
           <View style={styles.jumlahHariContainer}>
             <TouchableOpacity
@@ -133,35 +243,6 @@ const Izin_Tahunan = () => {
               <Text style={styles.jumlahHariButtonText}>+</Text>
             </TouchableOpacity>
           </View>
-        </View>
-
-        <View style={styles.form}>
-          <Text style={styles.label}>Tanggal Mulai Cuti:</Text>
-          <Button
-            style={styles.button}
-            contentStyle={styles.colorBtn}
-            labelStyle={styles.textBtn}
-            mode="contained"
-            icon={() => (
-              <MaterialCommunityIcons
-                name="calendar"
-                size={24}
-                color={Color.White}
-              />
-            )}
-            onPress={showTanggalMulaiPickerModal}
-          >
-            {formatDate(tanggalMulaiCuti)}
-          </Button>
-          {showTanggalMulaiPicker && (
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={tanggalMulaiCuti}
-              mode="date"
-              display="default"
-              onChange={onChangeTanggalMulai}
-            />
-          )}
         </View>
 
         <View style={styles.form}>

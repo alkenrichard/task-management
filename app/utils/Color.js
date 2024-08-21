@@ -6,7 +6,7 @@ export default {
   White: "#FFF",
 
   Grey: "#EDEDED",
-  
+
   GreyText: "#9a9a9a",
 
   Yellow: "#FFDF28",
@@ -21,10 +21,8 @@ export default {
 
   Pink: "#FF008A",
 
-
   //Profile
   label_profile: "#666",
   value_profile: "#333",
   eror_profile: "#FF5454",
-  
 };

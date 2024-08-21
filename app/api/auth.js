@@ -12,10 +12,8 @@ export const loginAPI = async (email, password) => {
       {
         headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Headers": "Content-Type",
         },
-        timeout: 3000, // timeout after 5 seconds
+        timeout: 5000,
       }
     );
     console.log("API Response:", response.data);
