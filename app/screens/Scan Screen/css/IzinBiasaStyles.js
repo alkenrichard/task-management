@@ -45,6 +45,30 @@ const styles = StyleSheet.create({
     height: 50,
     backgroundColor: Color.Red,
   },
+
+  // Date Picker
+  touchable: {
+    borderRadius: 12,
+    borderColor: Color.GreyText,
+    borderWidth: 1,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+  },
+  touchableContent: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  verticalLine: {
+    width: 1,
+    height: 30,
+    marginHorizontal: 15,
+    backgroundColor: Color.GreyText,
+  },
+  touchableText: {
+    fontFamily: Font["Poppins-Medium"],
+    fontSize: 15,
+    color: Color.Primary,
+  },
 });
 
 export default styles;

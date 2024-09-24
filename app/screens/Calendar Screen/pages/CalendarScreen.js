@@ -1,10 +1,10 @@
-import { StyleSheet, Text, View, ScrollView, Image } from "react-native";
+import { Text, View, ScrollView, Image } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Calendar } from "react-native-calendars";
 import moment from "moment";
 import axios from "axios";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { format } from "date-fns"
+import { format } from "date-fns";
 import { id } from "date-fns/locale";
 
 import Heading from "../../../components/Heading";
@@ -19,7 +19,9 @@ const CalendarScreen = () => {
   const countryCode = "ID";
   const [markedDates, setMarkedDates] = useState({});
   const [selectedDate, setSelectedDate] = useState(today);
-  const formattedDate = format(selectedDate, "EEEE, d MMMM yyyy", { locale: id });
+  const formattedDate = format(selectedDate, "EEEE, d MMMM yyyy", {
+    locale: id,
+  });
 
   useEffect(() => {
     fetchHolidaysAndEvents();

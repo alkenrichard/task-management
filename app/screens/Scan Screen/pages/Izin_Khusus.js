@@ -3,15 +3,15 @@ import {
   View,
   Text,
   TextInput,
-  StyleSheet,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   Alert,
+  TouchableOpacity,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
+import { AntDesign, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { SelectList } from "react-native-dropdown-select-list";
 import { Button } from "react-native-paper";
 import { format } from "date-fns";
@@ -23,9 +23,9 @@ import {
   IncompleteFormModal,
 } from "../../../components/Modals/Modal_Izin_Khusus";
 import { pilihanIzinKhusus } from "../../../data/IzinData";
-import Font from "../../../utils/Font";
 import Color from "../../../utils/Color";
 import { permitAPI } from "../../../api/permit";
+import styles from "../css/IzinKhususStyles"
 
 function formatDate(date) {
   return format(date, "EEEE, d MMMM yyyy", { locale: id });
@@ -99,9 +99,9 @@ const Izin_Khusus = () => {
       setFormIncomplete(false);
 
       if (!pilihanIzinKhusus) {
-      Alert.alert("Error", "Pilihan izin tidak tersedia");
-      return;
-    }
+        Alert.alert("Error", "Pilihan izin tidak tersedia");
+        return;
+      }
 
       const selectedIzin = pilihanIzinKhusus.find(
         (Option) => Option.value === jenisIzin
@@ -203,22 +203,22 @@ const Izin_Khusus = () => {
 
         <View style={styles.form}>
           <Text style={styles.label}>Tanggal Mulai Cuti:</Text>
-          <Button
-            style={styles.button}
-            contentStyle={styles.colorBtn}
-            labelStyle={styles.textBtn}
-            mode="contained"
-            icon={() => (
-              <MaterialCommunityIcons
-                name="calendar"
-                size={24}
-                color={Color.White}
-              />
-            )}
+          <TouchableOpacity
+            style={styles.touchable}
             onPress={showTanggalMulaiPickerModal}
           >
-            {formatDate(tanggalMulaiCuti)}
-          </Button>
+            <View style={styles.touchableContent}>
+              <Ionicons
+                name="calendar-number"
+                size={24}
+                color={Color.Primary}
+              />
+              <View style={styles.verticalLine} />
+              <Text style={styles.touchableText}>
+                {formatDate(tanggalMulaiCuti)}
+              </Text>
+            </View>
+          </TouchableOpacity>
           {showTanggalMulaiPicker && (
             <DateTimePicker
               style={styles.form}
@@ -233,22 +233,22 @@ const Izin_Khusus = () => {
 
         <View style={styles.form}>
           <Text style={styles.label}>Tanggal Selesai Cuti:</Text>
-          <Button
-            style={styles.button}
-            contentStyle={styles.colorBtn}
-            labelStyle={styles.textBtn}
-            mode="contained"
-            icon={() => (
-              <MaterialCommunityIcons
-                name="calendar"
-                size={24}
-                color={Color.White}
-              />
-            )}
+          <TouchableOpacity
+            style={styles.touchable}
             onPress={showTanggalSelesaiPickerModal}
           >
-            {formatDate(tanggalSelesaiCuti)}
-          </Button>
+            <View style={styles.touchableContent}>
+              <Ionicons
+                name="calendar-number"
+                size={24}
+                color={Color.Primary}
+              />
+              <View style={styles.verticalLine} />
+              <Text style={styles.touchableText}>
+                {formatDate(tanggalSelesaiCuti)}
+              </Text>
+            </View>
+          </TouchableOpacity>
           {showTanggalSelesaiPicker && (
             <DateTimePicker
               style={styles.form}
@@ -304,7 +304,8 @@ const Izin_Khusus = () => {
           jenisIzin={jenisIzin}
           tanggalMulaiCuti={tanggalMulaiCuti}
           pengganti={pengganti}
-          pilihanIzinKhusus={pilihanIzinKhusus}        />
+          pilihanIzinKhusus={pilihanIzinKhusus}
+        />
 
         <IncompleteFormModal
           visible={formIncomplete}
@@ -316,48 +317,3 @@ const Izin_Khusus = () => {
 };
 
 export default Izin_Khusus;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: Color.White,
-  },
-  label: {
-    fontFamily: Font["Poppins-Regular"],
-    fontSize: 15,
-  },
-  form: {
-    marginBottom: 10,
-  },
-  button: {
-    borderRadius: 12,
-    marginBottom: 10,
-  },
-  colorBtn: {
-    height: 50,
-    backgroundColor: Color.Primary,
-  },
-  textBtn: {
-    fontFamily: Font["Poppins-Bold"],
-    fontSize: 16,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: Color.GreyText,
-    borderRadius: 12,
-    padding: 10,
-    marginBottom: 10,
-  },
-  btnConfirm: {
-    paddingTop: 20,
-    paddingBottom: 0,
-  },
-  start: {
-    color: Color.Green,
-  },
-  rulesBtn: {
-    height: 50,
-    backgroundColor: Color.Red,
-  },
-});

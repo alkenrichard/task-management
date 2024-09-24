@@ -1,9 +1,8 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity} from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import Color from "../../../utils/Color";
-import Font from "../../../utils/Font";
 import styles from "../css/MenuCutiStyles";
 
 const ListMenuCuti = ({ title, iconName, onPress }) => {

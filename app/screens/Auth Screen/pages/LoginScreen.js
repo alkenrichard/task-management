@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Image, Modal, StyleSheet, Text, View } from "react-native";
+import { Image, Modal,  Text, View } from "react-native";
 import LottieView from "lottie-react-native";
 import { Button } from "react-native-paper";
 

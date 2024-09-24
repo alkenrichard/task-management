@@ -17,12 +17,38 @@ const styles = StyleSheet.create({
   form: {
     marginBottom: 10,
   },
+  input: {
+    borderWidth: 1,
+    borderColor: Color.GreyText,
+    borderRadius: 12,
+    padding: 10,
+    marginBottom: 10,
+  },
+  touchable: {
+    borderRadius: 12,
+    borderColor: Color.GreyText,
+    borderWidth: 1,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+  },
+  touchableContent: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  verticalLine: {
+    width: 1,
+    height: 30,
+    marginHorizontal: 15,
+    backgroundColor: Color.GreyText,
+  },
+  touchableText: {
+    fontFamily: Font["Poppins-Medium"],
+    fontSize: 15,
+    color: Color.Primary,
+  },
   button: {
     borderRadius: 12,
-    borderColor: Color.Primary, // tambahkan border color
-    borderWidth: 1, // tambahkan border width
-    justifyContent: "flex-start", // posisikan konten ke kiri
-    paddingHorizontal: 10, // tambahkan padding di kiri dan kanan
+    borderColor: Color.Primary,
   },
   colorBtn: {
     height: 50,
@@ -30,14 +56,14 @@ const styles = StyleSheet.create({
   },
   calendarForm: {
     height: 50,
-    flexDirection: "row", // atur agar ikon dan teks berada dalam satu baris
-    alignItems: "center", // vertikal tengah
+    flexDirection: "row",
+    alignItems: "center",
   },
   calendarText: {
     fontFamily: Font["Poppins-Bold"],
     fontSize: 16,
     color: Color.Primary,
-    
+    textAlign: "left",
   },
   btnConfirm: {
     paddingTop: 20,
@@ -46,13 +72,6 @@ const styles = StyleSheet.create({
   textBtn: {
     fontFamily: Font["Poppins-Bold"],
     fontSize: 16,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: Color.GreyText,
-    borderRadius: 12,
-    padding: 10,
-    marginBottom: 10,
   },
   jumlahHariContainer: {
     flexDirection: "row",

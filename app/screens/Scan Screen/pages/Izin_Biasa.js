@@ -7,10 +7,11 @@ import {
   Platform,
   ScrollView,
   Alert,
+  TouchableOpacity,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
+import { AntDesign, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { SelectList } from "react-native-dropdown-select-list";
 import { Button } from "react-native-paper";
 import { format } from "date-fns";
@@ -198,22 +199,22 @@ const Izin_Biasa = () => {
 
         <View style={styles.form}>
           <Text style={styles.label}>Tanggal Mulai Cuti:</Text>
-          <Button
-            style={styles.button}
-            contentStyle={styles.colorBtn}
-            labelStyle={styles.textBtn}
-            mode="contained"
-            icon={() => (
-              <MaterialCommunityIcons
-                name="calendar"
-                size={24}
-                color={Color.White}
-              />
-            )}
+          <TouchableOpacity
+            style={styles.touchable}
             onPress={showTanggalMulaiPickerModal}
           >
-            {formatDate(tanggalMulaiCuti)}
-          </Button>
+            <View style={styles.touchableContent}>
+              <Ionicons
+                name="calendar-number"
+                size={24}
+                color={Color.Primary}
+              />
+              <View style={styles.verticalLine} />
+              <Text style={styles.touchableText}>
+                {formatDate(tanggalMulaiCuti)}
+              </Text>
+            </View>
+          </TouchableOpacity>
           {showTanggalMulaiPicker && (
             <DateTimePicker
               style={styles.form}
@@ -228,22 +229,22 @@ const Izin_Biasa = () => {
 
         <View style={styles.form}>
           <Text style={styles.label}>Tanggal Selesai Cuti:</Text>
-          <Button
-            style={styles.button}
-            contentStyle={styles.colorBtn}
-            labelStyle={styles.textBtn}
-            mode="contained"
-            icon={() => (
-              <MaterialCommunityIcons
-                name="calendar"
-                size={24}
-                color={Color.White}
-              />
-            )}
+          <TouchableOpacity
+            style={styles.touchable}
             onPress={showTanggalSelesaiPickerModal}
           >
-            {formatDate(tanggalSelesaiCuti)}
-          </Button>
+            <View style={styles.touchableContent}>
+              <Ionicons
+                name="calendar-number"
+                size={24}
+                color={Color.Primary}
+              />
+              <View style={styles.verticalLine} />
+              <Text style={styles.touchableText}>
+                {formatDate(tanggalSelesaiCuti)}
+              </Text>
+            </View>
+          </TouchableOpacity>
           {showTanggalSelesaiPicker && (
             <DateTimePicker
               style={styles.form}
