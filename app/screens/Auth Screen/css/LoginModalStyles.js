@@ -6,6 +6,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     padding: 20,
+    backgroundColor: Color.White,
   },
   headerContainer: {
     display: "flex",

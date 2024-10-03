@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import {
   AntDesign,
   Feather,
@@ -20,7 +14,7 @@ import { LogoutModal } from "../../../components/Modals/Modal_Profile";
 
 import Color from "../../../utils/Color";
 import Collection from "../../../utils/Collection";
-import styles from "../css/ProfileScreenStyles"
+import styles from "../css/ProfileScreenStyles";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
@@ -184,5 +178,3 @@ const ProfileScreen = () => {
 };
 
 export default ProfileScreen;
-
-

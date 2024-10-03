@@ -5,14 +5,14 @@ import Color from "../../../utils/Color";
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 25,
     backgroundColor: Color.White,
+    justifyContent: "space-between",
   },
   headerContainer: {
-    display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingTop: 10,
   },
   headerLogo: {
     display: "flex",
@@ -72,10 +72,6 @@ const styles = StyleSheet.create({
   },
 
   //Button
-  buttonContainer: {
-    gap: 15,
-    marginTop: 80,
-  },
   button: {
     borderRadius: 30,
   },
@@ -106,7 +102,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 0,
     right: 0,
-    bottom: 10,
+    bottom: 0,
     alignItems: "center",
   },
   versionText: {

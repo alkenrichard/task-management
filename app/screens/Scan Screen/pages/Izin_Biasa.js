@@ -169,7 +169,7 @@ const Izin_Biasa = () => {
           <TextInput
             style={styles.input}
             value={
-              userData ? userData.nama_lengkap : "Nama pengguna tidak ditemukan"
+              userData ? userData.nama_lengkap : "Nama anda tidak ditemukan"
             }
             editable={false}
             multiline
@@ -180,7 +180,7 @@ const Izin_Biasa = () => {
           <Text style={styles.label}>NIK:</Text>
           <TextInput
             style={styles.input}
-            value={userData ? userData.nik : "Nik pengguna tidak ditemukan"}
+            value={userData ? userData.nik : "Nik anda tidak ditemukan"}
             editable={false}
             multiline
           />
@@ -278,7 +278,7 @@ const Izin_Biasa = () => {
         </View>
 
         <View style={styles.btnConfirm}>
-          <Button
+          <Button3
             style={styles.button}
             contentStyle={styles.colorBtn}
             labelStyle={styles.textBtn}
@@ -286,7 +286,7 @@ const Izin_Biasa = () => {
             onPress={submitForm}
           >
             Ajukan Cuti
-          </Button>
+          </Button3>
         </View>
 
         <RulesModal

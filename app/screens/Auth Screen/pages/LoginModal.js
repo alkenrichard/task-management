@@ -5,30 +5,34 @@ import {
   TouchableOpacity,
   TextInput,
   Keyboard,
+  BackHandler,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Button } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as LocalAuthentication from "expo-local-authentication";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import Collection from "../../../utils/Collection";
 import Color from "../../../utils/Color";
 import styles from "../css/LoginModalStyles";
 
-import { loginAPI } from "../../../api/auth"
+import { loginAPI } from "../../../api/auth";
 import ModalFailed from "../../../components/Modals/Modal_Failed";
 
-import { useNavigation } from "@react-navigation/native";
+import PopupPengembangan from "../../../components/Modals/Popup_Pengembangan";
 
-export default function LoginModal({ hideModal }) {
-  const navigation = useNavigation();
+export default function LoginModal({ hideModal, navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+  const [devPopupVisible, setDevPopupVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -41,6 +45,7 @@ export default function LoginModal({ hideModal }) {
       return;
     }
     try {
+      setLoading(true);
       const data = await loginAPI(email, password);
 
       if (!data.error) {
@@ -70,14 +75,13 @@ export default function LoginModal({ hideModal }) {
           const enrolled = await LocalAuthentication.isEnrolledAsync();
           if (enrolled) {
             const result = await LocalAuthentication.authenticateAsync({
-              promptMessage: "Login with Biometrics",
-              fallbackLabel: "Enter Password",
+              promptMessage: "Login dengan biometrik",
+              fallbackLabel: "Masukkan kata sandi",
             });
 
             if (result.success) {
               const storedUserData = await AsyncStorage.getItem("userData");
               console.log("Stored user data:", storedUserData);
-              hideModal();
               navigation.navigate("Home", {
                 user: {
                   nik,
@@ -89,18 +93,18 @@ export default function LoginModal({ hideModal }) {
                 },
               });
             } else {
-              setModalMessage("Biometric authentication failed");
+              setModalMessage("Autentikasi biometrik gagal");
               setModalVisible(true);
             }
           } else {
             setModalMessage(
-              "Please set up biometrics on your device and try again."
+              "Silakan atur biometrik pada perangkat anda dan coba lagi."
             );
             setModalVisible(true);
           }
         } else {
           setModalMessage(
-            "Your device does not support biometric authentication."
+            "Perangkat anda tidak mendukung autentikasi biometrik."
           );
           setModalVisible(true);
         }
@@ -109,12 +113,23 @@ export default function LoginModal({ hideModal }) {
         setModalVisible(true);
       }
     } catch (error) {
-      setModalMessage("An error occurred", error.message);
+      setModalMessage("Terjadi kesalahan pada server. Coba lagi nanti");
       setModalVisible(true);
+      setLoading(false);
     }
   };
 
   useEffect(() => {
+    const backAction = () => {
+      navigation.goBack();
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
       () => {
@@ -130,11 +145,12 @@ export default function LoginModal({ hideModal }) {
     return () => {
       keyboardDidHideListener.remove();
       keyboardDidShowListener.remove();
+      backHandler.remove();
     };
   }, [isKeyboardVisible]);
 
   return (
-    <View style={styles.mainContainer}>
+    <KeyboardAwareScrollView style={styles.mainContainer}>
       <View style={styles.headerContainer}>
         <View style={styles.headerLogo}>
           <Image
@@ -144,7 +160,7 @@ export default function LoginModal({ hideModal }) {
           />
           <Text style={styles.textLogo}>SAS</Text>
         </View>
-        <TouchableOpacity onPress={() => hideModal()}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="close" size={30} color={Color.Black} />
         </TouchableOpacity>
       </View>
@@ -166,6 +182,7 @@ export default function LoginModal({ hideModal }) {
           keyboardType="email-address"
           autoCapitalize="none"
           style={styles.emailInput}
+          cursorColor={Color.Primary}
         />
         <View style={styles.passwordContainer}>
           <TextInput
@@ -174,6 +191,7 @@ export default function LoginModal({ hideModal }) {
             onChangeText={setPassword}
             secureTextEntry={!showPassword}
             style={styles.passwordInput}
+            cursorColor={Color.Primary}
           />
           <TouchableOpacity onPress={togglePasswordVisibility}>
             <Ionicons
@@ -183,20 +201,28 @@ export default function LoginModal({ hideModal }) {
             />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity>
-          <Text style={styles.forgotText}>Forgot Your Password?</Text>
+        <TouchableOpacity onPress={() => setDevPopupVisible(true)}>
+          <Text style={styles.forgotText}>Lupa Password?</Text>
         </TouchableOpacity>
       </View>
 
       <Button
         mode="contained"
-        onPress={handleLogin}
+        onPress={() => !loading && handleLogin()}
         style={styles.button}
         contentStyle={styles.signBtn}
         labelStyle={styles.textSignBtn}
       >
-        Sign In
+        {loading ? (
+          <ActivityIndicator size={"small"} color={Color.White} />
+        ) : (
+          "Sign In"
+        )}
       </Button>
+
+      {devPopupVisible && (
+        <PopupPengembangan onClose={() => setDevPopupVisible(false)} />
+      )}
 
       <ModalFailed
         visible={modalVisible}
@@ -205,6 +231,6 @@ export default function LoginModal({ hideModal }) {
         }}
         message={modalMessage}
       />
-    </View>
+    </KeyboardAwareScrollView>
   );
 }

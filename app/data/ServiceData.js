@@ -1,7 +1,7 @@
 import Collection from "../utils/Collection";
 
 const ServiceData = [
-  { id: 1, title: "Payroll", icon: Collection.Payroll },
+  { id: 1, title: "Payroll", icon: Collection.payroll},
   { id: 2, title: "History", icon: Collection.History },
   { id: 3, title: "Ticketing", icon: Collection.Ticketing },
   { id: 4, title: "Poliklinik", icon: Collection.Poliklinik },

@@ -11,8 +11,6 @@ import ServiceDetail from "../screens/Service Detail/ServiceDetail";
 import Color from "../utils/Color";
 import Font from "../utils/Font";
 
-
-
 const Stack = createStackNavigator();
 
 const AppsNavigation = () => {

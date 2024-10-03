@@ -1,12 +1,16 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Text, View, StyleSheet, Dimensions } from "react-native";
 import { CameraView, Camera } from "expo-camera";
+import * as Location from "expo-location";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import axios from "axios";
-import ModalSuccess from "../../../components/Modals/Modal_Success";
 import { BASE_ENDPOINT, ATTENDANCE_ENDPOINT } from "../../../configs/apiConfig";
 import { sendPresensiMasuk } from "../../../api/attendance";
+import { calculateDistance } from "../../../utils/Location";
+import { allowedLocations } from "../../../constants/locationCoords";
+import ModalSuccess from "../../../components/Modals/Modal_Success";
+import ModalFailed from "../../../components/Modals/Modal_Failed";
 
 const { width, height } = Dimensions.get("window");
 
@@ -15,8 +19,11 @@ export default function CameraQR({ updateClockTimes }) {
   const [scanned, setScanned] = useState(false);
   const [userData, setUserData] = useState(null);
   const [clockInTime, setClockInTime] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
+  const [successModalVisible, setSuccessModalVisible] = useState(false);
+  const [successModalMessage, setSuccessModalMessage] = useState("");
+  const [failedModalVisible, setFailedModalVisible] = useState(false);
+  const [failedModalMessage, setFailedModalMessage] = useState("");
+  const [userLocation, setUserLocation] = useState(null);
 
   const navigation = useNavigation();
 
@@ -41,7 +48,17 @@ export default function CameraQR({ updateClockTimes }) {
       setHasPermission(status === "granted");
     };
 
+    const getLocationPermission = async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setFailedModalMessage("Lokasi diperlukan untuk melakukan presensi");
+        setFailedModalVisible(true);
+        return;
+      }
+    };
+
     getCameraPermissions();
+    getLocationPermission();
   }, []);
 
   useFocusEffect(
@@ -76,13 +93,43 @@ export default function CameraQR({ updateClockTimes }) {
     }
   };
 
-  const handleBacodeScanned = ({ data }) => {
+  const handleBacodeScanned = async ({ data }) => {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      setFailedModalMessage("Lokasi diperlukan untuk melakukan presensi");
+      setFailedModalVisible(true);
+      setScanned(false);
+      return;
+    }
+
+    const location = await Location.getCurrentPositionAsync({});
+    setUserLocation(location);
+
+    const isInAllowedRange = allowedLocations.some((loc) => {
+      const distance = calculateDistance(
+        location.coords.latitude,
+        location.coords.longitude,
+        loc.latitude,
+        loc.longitude
+      );
+      return distance <= 500;
+    });
+
+    if (!isInAllowedRange) {
+      setFailedModalMessage("Anda berada di luar radius yang ditentukan");
+      setFailedModalVisible(true);
+      setScanned(false);
+      return;
+    }
+
     sendPresensiMasuk(
       userData,
       clockInTime,
       updateClockTimes,
-      setModalMessage,
-      setModalVisible,
+      setSuccessModalMessage,
+      setSuccessModalVisible,
+      setFailedModalMessage,
+      setFailedModalVisible,
       setScanned
     );
   };
@@ -107,17 +154,22 @@ export default function CameraQR({ updateClockTimes }) {
         }}
         style={styles.camera}
       >
-        <View style={styles.buttonContainer}>
-          {scanned && <View style={styles.barcodeContainer}></View>}
-        </View>
+        <View>{scanned && <View></View>}</View>
       </CameraView>
       <ModalSuccess
-        visible={modalVisible}
+        visible={successModalVisible}
         onClose={() => {
-          setModalVisible(false);
+          setSuccessModalVisible(false);
         }}
-        message={modalMessage}
+        message={successModalMessage}
         onNavigate={handleNavigate}
+      />
+      <ModalFailed
+        visible={failedModalVisible}
+        onClose={() => {
+          setFailedModalVisible(false);
+        }}
+        message={failedModalMessage}
       />
     </View>
   );

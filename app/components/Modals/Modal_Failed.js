@@ -5,7 +5,6 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  Dimensions,
 } from "react-native";
 import LottieView from "lottie-react-native";
 
@@ -17,13 +16,13 @@ const ModalFailed = ({ visible, onClose, message }) => {
   return (
     <Modal
       animationType="fade"
-      transparent={true}
+        transparent={true}    
       visible={visible}
       onRequestClose={onClose}
     >
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
-          <LottieView
+          <LottieView     
             style={{ width: 80, height: 80 }}
             source={Collection.Lottie_Close}
             autoPlay

@@ -8,15 +8,19 @@ export const sendPresensiMasuk = async (
   userData,
   clockInTime,
   updateClockTimes,
-  setModalMessage,
-  setModalVisible,
+  setSuccessModalMessage,
+  setSuccessModalVisible,
+  setFailedModalMessage,
+  setFailedModalVisible,
   setScanned
 ) => {
   setScanned(true);
 
   if (clockInTime) {
-    setModalMessage(`Anda sudah melakukan presensi pada pukul ${clockInTime}`);
-    setModalVisible(true);
+    setSuccessModalMessage(
+      `Anda sudah melakukan presensi pada pukul ${clockInTime}`
+    );
+    setSuccessModalVisible(true);
     setScanned(false);
     return;
   }
@@ -29,26 +33,29 @@ export const sendPresensiMasuk = async (
         kode_bagian: userData.divisi,
         kode_izin_masuk: "HDR",
       };
+      console.log("Payload dikirim:", payload);
+
       const response = await axios.post(
         `${BASE_ENDPOINT}${ATTENDANCE_ENDPOINT}`,
         payload,
         { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
       );
+      console.log("Server Response:", response.data);
       if (response.data.success) {
         updateClockTimes(response.data.jam_masuk);
-        setModalMessage("Absen masuk berhasil");
-        setModalVisible(true);
+        setSuccessModalMessage("Absen masuk berhasil");
+        setSuccessModalVisible(true);
       } else {
-        setModalMessage(response.data.message);
-        setModalVisible(true);
+        setFailedModalMessage(response.data.message);
+        setFailedModalVisible(true);
       }
     } else {
-      setModalMessage("User Data not available");
-      setModalVisible(true);
+      setFailedModalMessage("Data user tidak tersedia");
+      setFailedModalVisible(true);
     }
   } catch (error) {
-    setModalMessage("An error occurred while sending absensi data");
-    setModalVisible(true);
+    setFailedModalMessage("Terjadi kesalahan saat mengirim data presensi");
+    setFailedModalVisible(true);
   }
   // Reset Scanned
   setScanned(false);
@@ -104,6 +111,6 @@ export const sendPresensiKeluar = async (
   } catch (error) {
     setFailedModalMessage("Terjadi kesalahan saat mengirim data presensi");
     setFailedModalVisible(true);
-    console.error("Error sending absensi data:", error);
+    console.error("Terjadi kesalahan saat mengirim data presensi:", error);
   }
 };

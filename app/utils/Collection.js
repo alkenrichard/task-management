@@ -1,3 +1,5 @@
+import Payroll from "../../assets/icons/payroll.svg";
+
 const Collection = {
   //Logo & Icon
   Logo: require("../../assets/images/Logo-Master-SIM-73.png"),
@@ -5,6 +7,8 @@ const Collection = {
   Error: require("../../assets/images/404.png"),
   NoSchedule: require("../../assets/images/no_schedule.png"),
   Profile: require("../../assets/images/default-profile.jpg"),
+
+  payroll: Payroll,
 
   //Inspiration
   Inspiration1: require("../../assets/images/inspirations/event1.png"),

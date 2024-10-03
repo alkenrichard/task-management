@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Image, Modal,  Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Alert, BackHandler, Image, Modal, Text, View } from "react-native";
 import LottieView from "lottie-react-native";
 import { Button } from "react-native-paper";
 
@@ -7,12 +7,26 @@ import LoginModal from "./LoginModal";
 
 import Collection from "../../../utils/Collection";
 import styles from "../css/LoginScreenStyles";
+import { StatusBar } from "expo-status-bar";
 
-const LoginScreen = () => {
-  const [showModal, setShowModal] = useState(false);
+const LoginScreen = ({ navigation }) => {
+  useEffect(() => {
+    const backAction = () => {
+      console.log("back");
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   return (
     <View style={styles.mainContainer}>
+      <StatusBar style="dark" />
       <View style={styles.headerContainer}>
         <View style={styles.headerLogo}>
           <Image
@@ -43,10 +57,10 @@ const LoginScreen = () => {
         </View>
       </View>
 
-      <View style={styles.buttonContainer}>
+      <View>
         <Button
           mode="contained"
-          onPress={() => setShowModal(true)}
+          onPress={() => navigation.navigate("Login Modal")}
           style={styles.button}
           contentStyle={styles.loginBtn}
           labelStyle={styles.textLoginBtn}
@@ -57,9 +71,6 @@ const LoginScreen = () => {
       <View style={styles.versionContainer}>
         <Text style={styles.versionText}>Version 1.0.0</Text>
       </View>
-      <Modal animationType="slide" visible={showModal}>
-        <LoginModal hideModal={() => setShowModal(false)} />
-      </Modal>
     </View>
   );
 };
