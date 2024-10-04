@@ -12,8 +12,8 @@
     "icon": "./assets/images/Icon-SAS.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/images/Logo-Master-SIM-73.png",
-      "resizeMode": "contain",
+      "image": "./assets/images/Splash.png",
+      "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": [

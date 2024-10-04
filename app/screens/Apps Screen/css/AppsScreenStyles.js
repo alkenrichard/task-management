@@ -16,25 +16,21 @@ const styles = StyleSheet.create({
   model: {
     right: 14,
   },
-  square1: {
-    borderRadius: 12,
-    backgroundColor: Color.Yellow,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   square2: {
-    right: -6,
-    bottom: -6,
-    borderRadius: 12,
+    right: -3,
+    bottom: -3,
+    borderRadius: 16.19,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Color.Primary,
+    backgroundColor: "#FFFFFF",
+    elevation: 3,
   },
   icon: {
     borderRadius: 12,
+    resizeMode: "contain",
   },
   textContainer: {
-    left: 6,
+    left: 3,
     textAlign: "center",
     width: 125,
   },

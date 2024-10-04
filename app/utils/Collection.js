@@ -28,6 +28,14 @@ const Collection = {
   History: require("../../assets/images/services/history.png"),
   Poliklinik: require("../../assets/images/services/poliklinik.png"),
   Ticketing: require("../../assets/images/services/ticketing.png"),
+  Pendidikan: require("../../assets/images/services/pendidikan.png"),
+  Keuangan: require("../../assets/images/services/keuangan.png"),
+  SDM: require("../../assets/images/services/sdm.png"),
+  Sarana: require("../../assets/images/services/sarana.png"),
+  Pengembagan: require("../../assets/images/services/pengembangan.png"),
+  SIM: require("../../assets/images/services/sim.png"),
+  Biro: require("../../assets/images/services/kerohanian.png"),
+
 
   //Lottie
   Lottie_Collaboration: require("../../assets/lottie/collaboration.json"),

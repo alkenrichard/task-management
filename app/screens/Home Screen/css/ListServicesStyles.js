@@ -1,5 +1,4 @@
 import { StyleSheet } from "react-native";
-import Color from "../../../utils/Color";
 import Font from "../../../utils/Font";
 
 const styles = StyleSheet.create({
@@ -15,25 +14,22 @@ const styles = StyleSheet.create({
   containerSquare: {
     alignItems: "center",
   },
-  square1: {
-    borderRadius: 12,
-    backgroundColor: Color.Yellow,
-    alignItems: "center",
-    justifyContent: "center",
-  },
+
   square2: {
-    right: -6,
-    bottom: -6,
-    borderRadius: 12,
+    right: -3,
+    bottom: -3,
+    borderRadius: 16.19,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Color.Primary,
+    backgroundColor: "#FFFFFF",
+    elevation:3,
   },
   icon: {
     borderRadius: 12,
+    resizeMode: "contain",
   },
   textContainer: {
-    left: 6,
+    left: 3,
     textAlign: "center",
     alignItems: "center",
   },
